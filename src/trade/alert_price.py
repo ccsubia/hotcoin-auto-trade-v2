@@ -80,6 +80,7 @@ async def alert_price(hot_coin, websocket):
                             f', 当前价格 {round(data_price, 5)}, {config.ALERT_PRICE_INTERVAL_MINUTE} 分钟后重试')
             time.sleep(config.ALERT_PRICE_INTERVAL_MINUTE * 60)
         except Exception as e:
+            logger.error(e)
             logger.error(f'Alert Price: 未知错误, 3秒后重试')
             traceback.print_exc()
             time.sleep(3)
