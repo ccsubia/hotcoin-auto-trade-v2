@@ -1,0 +1,32 @@
+[Secret]
+access_key =
+secret_key =
+bot_token =
+server_jiang_token =
+bot_name = hotcoin_apg_bot
+
+[API]
+symbol = apg_usdt
+http_api = api.hotcoinfin.com
+websockets_api = wss://wss.hotcoinfin.com/trade/multiple
+
+[Admin]
+super_admin = 705788276
+admins = 705788276
+
+[Trade]
+period_trade_on = False
+default_period_trade_amount_min = 10
+default_period_trade_amount_max = 20.2
+default_period_max_trade_amount = 2000
+default_period_trade_interval_time = 20
+default_period_is_open = True
+
+[Alert]
+alert_price_server_jiang_on = False
+alert_price_tg_on = True
+alert_price_tg_chat = 705788276
+alert_price_interval_minute = 1
+alert_price_min = 0.012
+alert_price_max = 0.02
+
