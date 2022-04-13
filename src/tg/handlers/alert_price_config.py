@@ -29,7 +29,7 @@ def check_admin(update):
     if update.effective_user.id in config.ADMINS:
         return True
     else:
-        rsp = update.message.reply_text('你没有管理员权限')
+        rsp = update.message.reply_text('仅管理员可调用此方法')
         rsp.done.wait(timeout=60)
         return False
 
@@ -44,14 +44,14 @@ def set_alert_price_min(update, context):
     params = params.split(',')
     if params[0] == '':
         text = '参数错误'
-    elif int(update.effective_user.id) == int(config.SUPER_ADMIN):
+    elif update.effective_user.id in config.ADMINS:
         config.ALERT_PRICE_MIN = params[0]
         raw_config['Alert']['alert_price_min'] = params[0]
         with open(raw_config_path, 'w') as configfile:
             raw_config.write(configfile)
         text = '设置成功'
     else:
-        text = '仅超级管理员可添加管理员'
+        text = '仅管理员可调用此方法'
     rsp = update.message.reply_text(text)
     rsp.done.wait(timeout=60)
 
@@ -66,14 +66,14 @@ def set_alert_price_max(update, context):
     params = params.split(',')
     if params[0] == '':
         text = '参数错误'
-    elif int(update.effective_user.id) == int(config.SUPER_ADMIN):
+    elif update.effective_user.id in config.ADMINS:
         config.ALERT_PRICE_MAX = params[0]
         raw_config['Alert']['alert_price_max'] = params[0]
         with open(raw_config_path, 'w') as configfile:
             raw_config.write(configfile)
         text = '设置成功'
     else:
-        text = '仅超级管理员可添加管理员'
+        text = '仅管理员可调用此方法'
     rsp = update.message.reply_text(text)
     rsp.done.wait(timeout=60)
 
@@ -88,14 +88,14 @@ def set_alert_price_interval_minute(update, context):
     params = params.split(',')
     if params[0] == '':
         text = '参数错误'
-    elif int(update.effective_user.id) == int(config.SUPER_ADMIN):
+    elif update.effective_user.id in config.ADMINS:
         config.ALERT_PRICE_INTERVAL_MINUTE = params[0]
         raw_config['Alert']['alert_price_interval_minute'] = params[0]
         with open(raw_config_path, 'w') as configfile:
             raw_config.write(configfile)
         text = '设置成功'
     else:
-        text = '仅超级管理员可添加管理员'
+        text = '仅管理员可调用此方法'
     rsp = update.message.reply_text(text)
     rsp.done.wait(timeout=60)
 
@@ -110,14 +110,14 @@ def set_alert_price_tg_chat(update, context):
     params = params.split(',')
     if params[0] == '':
         text = '参数错误'
-    elif int(update.effective_user.id) == int(config.SUPER_ADMIN):
+    elif update.effective_user.id in config.ADMINS:
         config.ALERT_PRICE_INTERVAL_MINUTE = params[0]
         raw_config['Alert']['alert_price_tg_chat'] = params[0]
         with open(raw_config_path, 'w') as configfile:
             raw_config.write(configfile)
         text = '设置成功'
     else:
-        text = '仅超级管理员可添加管理员'
+        text = '仅管理员可调用此方法'
     rsp = update.message.reply_text(text)
     rsp.done.wait(timeout=60)
 
