@@ -1,12 +1,15 @@
 [Secret]
 access_key =
 secret_key =
+other_access_keys =
+other_secret_keys =
 bot_token =
 server_jiang_token =
-bot_name = hotcoin_apg_bot
+bot_name =
 
 [API]
-symbol = apg_usdt
+symbol =
+symbol_name =
 http_api = api.hotcoinfin.com
 websockets_api = wss://wss.hotcoinfin.com/trade/multiple
 
