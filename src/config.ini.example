@@ -18,15 +18,23 @@ admins = 705788276
 period_trade_on = False
 default_period_trade_amount_min = 10
 default_period_trade_amount_max = 20.2
-default_period_max_trade_amount = 2000
+default_period_max_trade_amount = 100
 default_period_trade_interval_time = 20
 default_period_is_open = True
+batch_push_trade_on = False
+fork_trade_on = False
+fork_trade_amount_max = 100
+fork_trade_random_amount_min = 1
+fork_trade_random_amount_max = 2
 
 [Alert]
 alert_price_server_jiang_on = False
 alert_price_tg_on = True
 alert_price_tg_chat = 705788276
 alert_price_interval_minute = 1
-alert_price_min = 0.012
+alert_price_min = 0.004
 alert_price_max = 0.02
+
+[Report]
+report_tg_chat = 705788276
 

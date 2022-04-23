@@ -23,7 +23,8 @@ def add_admin(update, context):
     raw_config = configparser.ConfigParser()
     raw_config.read(raw_config_path, encoding='utf-8')
     logger.info('add_admin')
-    params = update.message.text.replace('/add_admin', '')
+    params = update.message.text.replace(f'@{config.BOT_NAME}', '')
+    params = params.replace('/add_admin', '')
     params = params.replace(' ', '')
     params = params.split(',')
     if params[0] == '':
@@ -44,7 +45,8 @@ def rm_admin(update, context):
     raw_config = configparser.ConfigParser()
     raw_config.read(raw_config_path, encoding='utf-8')
     logger.info('rm_admin')
-    params = update.message.text.replace('/rm_admin', '')
+    params = update.message.text.replace(f'@{config.BOT_NAME}', '')
+    params = params.replace('/rm_admin', '')
     params = params.replace(' ', '')
     params = params.split(',')
     if params[0] == '':

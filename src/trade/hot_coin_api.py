@@ -123,7 +123,7 @@ class HotCoin:
 
     def sell(self, price, amount):
         """sell someting(done)"""
-        return self.create_order(symbol=self.symbol, type='buy', tradePrice=price, tradeAmount=amount)
+        return self.create_order(symbol=self.symbol, type='sell', tradePrice=price, tradeAmount=amount)
 
     def get_order(self, order_id):
         """get specfic order(done)"""
@@ -168,19 +168,21 @@ class HotCoin:
     def get_ticker(self, step=60):
         return self.public_request('GET', 'ticker', symbol=self.symbol, step=step)
 
+    def get_24h_ticker(self):
+        return self.public_request('GET', 'market/ticker')
+
 
 CancelRecord = namedtuple('CancelRecord', ['orderId', 'side', 'price', 'origQty', 'executedQty', 'time'])
 
 if __name__ == "__main__":
     logging.info("Start...")
-    from trade.default_config import config
-
-    hot_coin = HotCoin(symbol=config['symbol'])
-    hot_coin.auth(key=config['key'], secret=config['secret'])
-    # logging.info(vaex.get_depth())
-    while True:
-        print(hot_coin.get_depth())
+    from src.utils.config_loader import config
+    config.load_config()
+    print(config.SYMBOL)
+    hot_coin = HotCoin(symbol=config.SYMBOL)
+    hot_coin.auth(key=config.ACCESS_KEY, secret=config.SECRET_KEY)
+    # while True:
+    #     print(hot_coin.get_depth())
         # time.sleep(3)
-    # logging.info(vaex.get_order(61964762655))
-    # target_trade_action(vaex=vaex, adjusted_percent=0.01)
-    # target_trade_allocation(vaex, 0.01, 0, 2)
+    # print(hot_coin.get_account_info())
+    # print(hot_coin.get_order())

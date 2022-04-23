@@ -45,7 +45,7 @@ def set_alert_price_min(update, context):
     if params[0] == '':
         text = '参数错误'
     elif update.effective_user.id in config.ADMINS:
-        config.ALERT_PRICE_MIN = params[0]
+        config.ALERT_PRICE_MIN = float(params[0])
         raw_config['Alert']['alert_price_min'] = params[0]
         with open(raw_config_path, 'w') as configfile:
             raw_config.write(configfile)
@@ -67,7 +67,7 @@ def set_alert_price_max(update, context):
     if params[0] == '':
         text = '参数错误'
     elif update.effective_user.id in config.ADMINS:
-        config.ALERT_PRICE_MAX = params[0]
+        config.ALERT_PRICE_MAX = float(params[0])
         raw_config['Alert']['alert_price_max'] = params[0]
         with open(raw_config_path, 'w') as configfile:
             raw_config.write(configfile)
@@ -89,7 +89,7 @@ def set_alert_price_interval_minute(update, context):
     if params[0] == '':
         text = '参数错误'
     elif update.effective_user.id in config.ADMINS:
-        config.ALERT_PRICE_INTERVAL_MINUTE = params[0]
+        config.ALERT_PRICE_INTERVAL_MINUTE = float(params[0])
         raw_config['Alert']['alert_price_interval_minute'] = params[0]
         with open(raw_config_path, 'w') as configfile:
             raw_config.write(configfile)
@@ -111,7 +111,7 @@ def set_alert_price_tg_chat(update, context):
     if params[0] == '':
         text = '参数错误'
     elif update.effective_user.id in config.ADMINS:
-        config.ALERT_PRICE_INTERVAL_MINUTE = params[0]
+        config.ALERT_PRICE_INTERVAL_MINUTE = float(params[0])
         raw_config['Alert']['alert_price_tg_chat'] = params[0]
         with open(raw_config_path, 'w') as configfile:
             raw_config.write(configfile)
