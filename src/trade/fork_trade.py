@@ -16,6 +16,7 @@ from trade import utils
 from trade.hot_coin_api import HotCoin
 from utils.config_loader import config
 from utils.csv_tool import read_csv_file, save_csv, add_csv_rows
+from utils.remind_func import remind_tg
 
 logger = logging.getLogger(__name__)
 
@@ -96,8 +97,8 @@ async def fork_trade(hot_coin, fork_coin_websocket):
             # Get Depth
             fork_coin_depth_data = HotCoin(symbol='btc_usdt').get_depth()
             self_coin_depth_data = hot_coin.get_depth()
-            logger.info(fork_coin_depth_data)
-            logger.info(self_coin_depth_data)
+            # logger.info(fork_coin_depth_data)
+            # logger.info(self_coin_depth_data)
             if 'data' not in fork_coin_depth_data:
                 logger.warning(f'{print_prefix} 深度获取失败')
                 continue
@@ -152,8 +153,8 @@ async def fork_trade(hot_coin, fork_coin_websocket):
                 trade_all_list.append({'price': trade_b1_price, 'amount': trade_b1_amount, 'trade_type': trade_b1_type})
                 trade_all_list.append({'price': trade_s1_price, 'amount': trade_s1_amount, 'trade_type': trade_s1_type})
 
-            # 挂单买卖2-5
-            for i in range(4):
+            # 挂单买卖2-3
+            for i in range(2):
                 push_sell_price = float(fork_coin_depth_data['data']['depth']['asks'][i + 1][0]) * fork_coin_scale
                 push_sell_price = round(push_sell_price, 8)
                 push_sell_amount = round(random.uniform(config.fork_trade_random_amount_min, config.fork_trade_random_amount_max), 4)
@@ -164,23 +165,33 @@ async def fork_trade(hot_coin, fork_coin_websocket):
                 push_buy_amount = round(random.uniform(config.fork_trade_random_amount_min, config.fork_trade_random_amount_max), 4)
                 trade_all_list.append({'price': push_buy_price, 'amount': push_buy_amount, 'trade_type': 1})
 
-            # 发送交易
+            # 校验限制
+            check_error_flag = False
             for item in trade_all_list:
                 if not config.ALERT_PRICE_MAX > item["price"] > config.ALERT_PRICE_MIN:
-                    logger.warning(f'交易价格超出预警区间, 价格: {item["price"]}')
+                    logger.warning(f'{print_prefix}交易价格超出预警区间, 价格: {item["price"]}')
+                    remind_tg(config.ALERT_PRICE_TG_CHAT, f'{print_prefix}交易价格超出预警区间, 价格: {item["price"]}')
+                    check_error_flag = True
                     break
                 if item["amount"] > config.fork_trade_amount_max:
-                    logger.warning(f'交易量超额, 交易量：{item["amount"]}')
+                    logger.warning(f'{print_prefix}交易量超额, 交易量：{item["amount"]}')
+                    remind_tg(config.ALERT_PRICE_TG_CHAT, f'{print_prefix}交易量超额, 交易量：{item["amount"]}')
+                    check_error_flag = True
                     break
+            if check_error_flag:
+                time.sleep(30)
+                break
+
+            # 发送交易
+            for item in trade_all_list:
                 logger.info(f'{print_prefix} 下单方向:{item["trade_type"]}, 价格:{item["price"]}, 下单量:{item["amount"]}')
                 result = hot_coin.trade(item["price"], item["amount"], item["trade_type"])
                 resultId = result['data']['ID']
                 logger.info(f'{print_prefix} 下单成功， ID：{resultId}')
                 # print(hot_coin.get_order(resultId))
-
             # Sleep
             logger.info(f'{print_prefix} 交易完成等待重新进入')
-            # time.sleep(1)
+            time.sleep(2)
             self_cnt += 1
             continue
         except Exception as e:
