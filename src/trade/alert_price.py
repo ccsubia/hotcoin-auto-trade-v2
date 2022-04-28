@@ -89,6 +89,7 @@ async def alert_price(hot_coin, websocket):
                 raw_config['Trade']['auto_batch_push_trade_time_interval'] = str(0)
                 with open(raw_config_path, 'w') as configfile:
                     raw_config.write(configfile)
+                remind_tg(config.ALERT_PRICE_TG_CHAT, '开始执行挂单')
                 batch_push_trade(
                     config.auto_batch_push_trade_type,
                     config.auto_batch_push_trade_push_count,
@@ -98,6 +99,7 @@ async def alert_price(hot_coin, websocket):
                     config.auto_batch_push_trade_up_amount,
                     config.auto_batch_push_trade_time_interval
                 )
+                remind_tg(config.ALERT_PRICE_TG_CHAT, '执行结束')
                 if config.ALERT_PRICE_SERVER_JIANG_ON:
                     remind_server_jiang(f'{config.SYMBOL} 价格预警, 当前价格  {round(data_price, 5)}', f'当前价格{round(data_price, 5)}')
             else:

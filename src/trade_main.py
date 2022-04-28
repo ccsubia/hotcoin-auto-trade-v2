@@ -205,7 +205,7 @@ def run_sched():
                               f'交易量总计{round(minutes_vol, 2)}')
                 else:
                     logger.info(f'{print_prefix} 交易量正常，{new_config.alert_vol_count_minute}分钟内交易 {minutes_vol}，'
-                                f'小于设定最小值{new_config.alert_vol_min}')
+                                f'大于设定最小值{new_config.alert_vol_min}')
             else:
                 logger.warning(f'{print_prefix} 交易量获取失败 {ticker_data}')
                 remind_tg(new_config.ALERT_PRICE_TG_CHAT, '交易量获取失败，请检查IP是否被封禁')

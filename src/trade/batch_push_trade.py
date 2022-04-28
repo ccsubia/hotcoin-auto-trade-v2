@@ -2,22 +2,11 @@
 # !/usr/bin/env python
 import logging
 import time
-import traceback
-from datetime import datetime
-
 
 from trade.hot_coin_api import HotCoin
 from utils.config_loader import config
 
 logger = logging.getLogger(__name__)
-
-
-def get_datetime(value):
-    return datetime.strptime(str(value), '%Y%m%d%H%M%S')
-
-
-def get_datetime_str(datetime_value):
-    return datetime_value.strftime('%Y%m%d%H%M%S')
 
 
 def batch_push_trade(type, push_count, start_price, price_step, push_first_amount, up_amount, time_interval):
