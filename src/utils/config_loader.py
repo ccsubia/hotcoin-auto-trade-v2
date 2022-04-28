@@ -35,11 +35,20 @@ class _Config:
         self._alert_price_interval_minute = 0
         self._alert_price_min = 0
         self._alert_price_max = 0
+        self._alert_vol_count_minute = 0
+        self._alert_vol_min = 0
 
         self._report_tg_chat = 0
 
         self._batch_push_trade_on = False
-
+        self._auto_batch_push_trade_type = 0
+        self._auto_batch_push_trade_push_count = 0
+        self._auto_batch_push_trade_start_price = 0
+        self._auto_batch_push_trade_price_step = 0
+        self._auto_batch_push_trade_push_first_amount = 0
+        self._auto_batch_push_trade_up_amount = 0
+        self._auto_batch_push_trade_time_interval = 0
+        
         self._fork_trade_on = False
         self._fork_trade_amount_max = 0
         self._fork_trade_random_amount_min = 0
@@ -105,6 +114,16 @@ class _Config:
             'fork_trade_on'
         ]
 
+        config_auto_push_trade_keywords_float = [
+            'auto_batch_push_trade_type',
+            'auto_batch_push_trade_push_count',
+            'auto_batch_push_trade_start_price',
+            'auto_batch_push_trade_price_step',
+            'auto_batch_push_trade_push_first_amount',
+            'auto_batch_push_trade_up_amount',
+            'auto_batch_push_trade_time_interval',
+        ]
+
         self.get_config_from_section('str', config_secret_keywords_str, config_secret)
         self.get_config_from_section('str', config_secret_keywords_optional_str, config_secret, optional=True)
         self.get_config_from_section('str', config_api_keywords_str, config_api)
@@ -115,9 +134,12 @@ class _Config:
         self.get_config_from_section('float', config_trade_keywords_float, config_trade)
         self.get_config_from_section('bool', config_trade_keywords_bool, config_trade)
 
+        self.get_config_from_section('float', config_auto_push_trade_keywords_float, config_trade, optional=True)
+
         self.get_config_from_section('bool', ['alert_price_server_jiang_on', 'alert_price_tg_on'], config_alert)
         self.get_config_from_section('float', ['alert_price_min', 'alert_price_max', 'alert_price_tg_chat',
-                                               'alert_price_interval_minute'], config_alert)
+                                               'alert_price_interval_minute', 'alert_vol_count_minute', 'alert_vol_min']
+                                     , config_alert)
         self.get_config_from_section('float', ['report_tg_chat'], config_report)
 
         if self._admins:
@@ -274,6 +296,22 @@ class _Config:
         self._alert_price_interval_minute = val
 
     @property
+    def alert_vol_count_minute(self):
+        return self._alert_vol_count_minute
+
+    @alert_vol_count_minute.setter
+    def alert_vol_count_minute(self, val):
+        self._alert_vol_count_minute = val
+
+    @property
+    def alert_vol_min(self):
+        return self._alert_vol_min
+
+    @alert_vol_min.setter
+    def alert_vol_min(self, val):
+        self._alert_vol_min = val
+
+    @property
     def REPORT_TG_CHAT(self):
         return self._report_tg_chat
 
@@ -312,6 +350,62 @@ class _Config:
     @batch_push_trade_on.setter
     def batch_push_trade_on(self, val):
         self._batch_push_trade_on = val
+
+    @property
+    def auto_batch_push_trade_type(self):
+        return self._auto_batch_push_trade_type
+    
+    @auto_batch_push_trade_type.setter
+    def auto_batch_push_trade_type(self, val):
+        self._auto_batch_push_trade_type = val
+    
+    @property
+    def auto_batch_push_trade_push_count(self):
+        return self._auto_batch_push_trade_push_count
+    
+    @auto_batch_push_trade_push_count.setter
+    def auto_batch_push_trade_push_count(self, val):
+        self._auto_batch_push_trade_push_count = val
+        
+    @property
+    def auto_batch_push_trade_start_price(self):
+        return self._auto_batch_push_trade_start_price
+    
+    @auto_batch_push_trade_start_price.setter
+    def auto_batch_push_trade_start_price(self, val):
+        self._auto_batch_push_trade_start_price = val
+        
+    @property
+    def auto_batch_push_trade_price_step(self):
+        return self._auto_batch_push_trade_price_step
+    
+    @auto_batch_push_trade_price_step.setter
+    def auto_batch_push_trade_price_step(self, val):
+        self._auto_batch_push_trade_price_step = val
+        
+    @property
+    def auto_batch_push_trade_push_first_amount(self):
+        return self._auto_batch_push_trade_push_first_amount
+    
+    @auto_batch_push_trade_push_first_amount.setter
+    def auto_batch_push_trade_push_first_amount(self, val):
+        self._auto_batch_push_trade_push_first_amount = val
+        
+    @property
+    def auto_batch_push_trade_up_amount(self):
+        return self._auto_batch_push_trade_up_amount
+    
+    @auto_batch_push_trade_up_amount.setter
+    def auto_batch_push_trade_up_amount(self, val):
+        self._auto_batch_push_trade_up_amount = val
+    
+    @property
+    def auto_batch_push_trade_time_interval(self):
+        return self._auto_batch_push_trade_time_interval
+    
+    @auto_batch_push_trade_time_interval.setter
+    def auto_batch_push_trade_time_interval(self, val):
+        self._auto_batch_push_trade_time_interval = val
 
     @property
     def fork_trade_on(self):

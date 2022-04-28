@@ -2,10 +2,8 @@
 # !/usr/bin/env python
 import json
 import logging
-import os
 import random
 import time
-import traceback
 import zlib
 from datetime import datetime
 
@@ -15,7 +13,6 @@ from websockets.exceptions import ConnectionClosedError
 from trade import utils
 from trade.hot_coin_api import HotCoin
 from utils.config_loader import config
-from utils.csv_tool import read_csv_file, save_csv, add_csv_rows
 from utils.remind_func import remind_tg
 
 logger = logging.getLogger(__name__)
@@ -44,7 +41,7 @@ async def fork_trade(hot_coin, fork_coin_websocket):
     fork_coin_scale = 0
     while True:
         try:
-            print_prefix = f'[Period Trade: {self_cnt}]'
+            print_prefix = f'[Fork Trade: {self_cnt}]'
             config.load_config()
 
             # Check fork_trade_on
@@ -55,24 +52,33 @@ async def fork_trade(hot_coin, fork_coin_websocket):
             logger.info(f'{print_prefix} Start time {utils.get_now_time_str("%Y/%m/%d %H:%M:%S")}...')
 
             # Get Fork Coin Price
-            fork_coin_recv_text = await fork_coin_websocket.recv()
-            fork_coin_ret = zlib.decompress(fork_coin_recv_text, 16 + zlib.MAX_WBITS).decode('utf-8')
-            fork_coin_ret = json.loads(fork_coin_ret)
-            logger.info(fork_coin_ret)
-            if 'ping' in fork_coin_ret:
-                await fork_coin_websocket.send('{"pong": "pong"}')
-            if 'data' in fork_coin_ret:
-                fork_coin_data_price = float(fork_coin_ret['data'][0][4])
-            else:
-                fork_coin_ticker_data = HotCoin(symbol='btc_usdt').get_ticker(86400)
-                if fork_coin_ticker_data['code'] == 200 and 'data' in fork_coin_ticker_data:
-                    fork_coin_data_price = float(fork_coin_ticker_data['data'][-1][4])
-                    logger.info(f'fork_coin_data_price: {fork_coin_data_price}')
+            try:
+                fork_coin_recv_text = await fork_coin_websocket.recv()
+                fork_coin_ret = zlib.decompress(fork_coin_recv_text, 16 + zlib.MAX_WBITS).decode('utf-8')
+                fork_coin_ret = json.loads(fork_coin_ret)
+                logger.info(fork_coin_ret)
+                if 'ping' in fork_coin_ret:
+                    await fork_coin_websocket.send('{"pong": "pong"}')
+                if 'data' in fork_coin_ret:
+                    fork_coin_data_price = float(fork_coin_ret['data'][0][4])
                 else:
-                    logger.warning(fork_coin_ticker_data)
-                    logger.warning(f'{print_prefix} 获取价格失败')
-                    raise Exception
-
+                    fork_coin_ticker_data = HotCoin(symbol='btc_usdt').get_ticker(86400)
+                    if fork_coin_ticker_data['code'] == 200 and 'data' in fork_coin_ticker_data:
+                        fork_coin_data_price = float(fork_coin_ticker_data['data'][-1][4])
+                        logger.info(f'fork_coin_data_price: {fork_coin_data_price}')
+                    else:
+                        logger.warning(fork_coin_ticker_data)
+                        logger.warning(f'{print_prefix} 获取价格失败')
+                        raise Exception
+            except ConnectionClosedError as e:
+                logger.warning(e)
+                logger.warning(f'{print_prefix} websockets 连接断开, 3秒后重连')
+                time.sleep(3)
+                async with websockets.connect(config.WEBSOCKETS_API, ping_interval=None) as new_websocket:
+                    logger.info(f'{print_prefix} 重新建立wss连接')
+                    fork_coin_websocket = new_websocket
+                    await fork_coin_websocket.send(fork_coin_kline_param)
+                    continue
             # Get Self Coin Price
             '''self_coin_recv_text = await self_coin_websocket.recv()
             self_coin_ret = zlib.decompress(self_coin_recv_text, 16 + zlib.MAX_WBITS).decode('utf-8')
@@ -185,9 +191,9 @@ async def fork_trade(hot_coin, fork_coin_websocket):
             # 发送交易
             for item in trade_all_list:
                 logger.info(f'{print_prefix} 下单方向:{item["trade_type"]}, 价格:{item["price"]}, 下单量:{item["amount"]}')
-                result = hot_coin.trade(item["price"], item["amount"], item["trade_type"])
-                resultId = result['data']['ID']
-                logger.info(f'{print_prefix} 下单成功， ID：{resultId}')
+                # result = hot_coin.trade(item["price"], item["amount"], item["trade_type"])
+                # resultId = result['data']['ID']
+                # logger.info(f'{print_prefix} 下单成功， ID：{resultId}')
                 # print(hot_coin.get_order(resultId))
             # Sleep
             logger.info(f'{print_prefix} 交易完成等待重新进入')
@@ -195,8 +201,7 @@ async def fork_trade(hot_coin, fork_coin_websocket):
             self_cnt += 1
             continue
         except Exception as e:
-            logger.error(e)
             logger.error(f'Fork Trade: 未知错误')
-            traceback.print_exc()
+            logger.exception(e)
             time.sleep(1)
             break

@@ -95,8 +95,8 @@ class HotCoin:
                 return http_get_request(url, params_to_sign, 10)
             elif method == 'POST':
                 return http_post_request(url, params_to_sign, 10)
-        except requests.exceptions.HTTPError as err:
-            traceback.print_exc()
+        except requests.exceptions.HTTPError as e:
+            logger.exception(e)
 
     def get_depth(self):
         """get market depth"""

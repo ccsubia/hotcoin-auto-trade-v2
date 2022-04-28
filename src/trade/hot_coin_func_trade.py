@@ -105,7 +105,7 @@ async def self_trade(hot_coin, websocket):
                 logging.warning(f'{print_prefix} 下单失败, retry')
                 time.sleep(2)
         except Exception as e:
-            traceback.print_exc()
+            logger.exception(e)
             time.sleep(2)
             break
         self_cnt += 1
@@ -164,7 +164,7 @@ async def cross_trade(hot_coin, websocket):
                 continue
             time.sleep(config['cross_tradeFrequence'])
         except Exception as e:
-            traceback.print_exc()
+            logger.exception(e)
             time.sleep(2)
             break
         cross_cnt += 1
@@ -252,7 +252,7 @@ def save_trades(hot_coin, output_dir, save_file_num=1000):
                     utils.unix_ms_to_str(float(trade_info['createdAt'])),
                 ))
         except Exception as e:
-            traceback.print_exc()
+            logger.exception(e)
         return trade_res
 
     trade_ret = parse_my_trade(hot_coin.get_my_trade())
@@ -381,7 +381,7 @@ def target_trade_allocation(hot_coin, adjust_percent, duration_min, action_num):
             time.sleep(duration_second_list[i])
             target_trade_action(hot_coin, adjust_percent_list[i])
     except Exception as e:
-        traceback.print_exc()
+        logger.exception(e)
 
 
 # async func
@@ -396,5 +396,5 @@ def func(target_func):
 
             asyncio.get_event_loop().run_until_complete(main_logic())
         except Exception as e:
-            traceback.print_exc()
+            logger.exception(e)
             logging.warning("Main func failed, restart")

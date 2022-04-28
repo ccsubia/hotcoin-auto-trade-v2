@@ -40,16 +40,17 @@ def batch_push_trade(type, push_count, start_price, price_step, push_first_amoun
             if int(type) == 1:
                 if not config.ALERT_PRICE_MIN < float(start_price) - i * float(price_step) < config.ALERT_PRICE_MAX:
                     logger.warning(f'{print_prefix} 价格超出预警范围')
+                    break
                 logger.info(f'{print_prefix} 买单 {round(float(start_price) - i * float(price_step), 8)} {round(float(push_first_amount) + i * float(up_amount), 4)}')
                 hot_coin.buy(round(float(start_price) - i * float(price_step), 8), round(float(push_first_amount) + i * float(up_amount), 4))
             else:
                 if not config.ALERT_PRICE_MIN < float(start_price) + i * float(price_step) < config.ALERT_PRICE_MAX:
                     logger.warning(f'{print_prefix} 价格超出预警范围')
+                    break
                 logger.info(f'{print_prefix} 卖单 {round(float(start_price) + i * float(price_step), 8)} {round(float(push_first_amount) + i * float(up_amount), 4)}')
-                print(hot_coin.sell(round(float(start_price) + i * float(price_step), 8), round(float(push_first_amount) + i * float(up_amount), 4)))
+                hot_coin.sell(round(float(start_price) + i * float(price_step), 8), round(float(push_first_amount) + i * float(up_amount), 4))
             time.sleep(float(time_interval))
 
     except Exception as e:
-        logger.error(e)
         logger.error(f'{print_prefix} 发送错误')
-        traceback.print_exc()
+        logger.exception(e)

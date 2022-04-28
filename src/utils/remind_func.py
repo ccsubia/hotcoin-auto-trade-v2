@@ -48,4 +48,4 @@ if __name__ == '__main__':
         # print(remind_tg(705788276, 'test'))
         print(remind_server_jiang('test', 'test'))
     except Exception as  e:
-        traceback.print_exc()
+        logger.exception(e)

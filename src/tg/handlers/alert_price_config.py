@@ -24,6 +24,9 @@ def init(dispatcher: Dispatcher):
     dispatcher.add_handler(CommandHandler('set_alert_price_interval_minute', set_alert_price_interval_minute))
     dispatcher.add_handler(CommandHandler('set_alert_price_tg_chat', set_alert_price_tg_chat))
 
+    dispatcher.add_handler(CommandHandler('set_alert_vol_count_minute', set_alert_vol_count_minute))
+    dispatcher.add_handler(CommandHandler('set_alert_vol_min', set_alert_vol_min))
+
 
 def check_admin(update):
     if update.effective_user.id in config.ADMINS:
@@ -186,9 +189,55 @@ def alert_config_show(update, context):
     logger.info('alert_config_show')
     text = f'*预警配置*\n' \
            f'价格区间 {config.ALERT_PRICE_MIN} - {config.ALERT_PRICE_MAX}\n' \
-           f'预警间隔 {config.ALERT_PRICE_INTERVAL_MINUTE} 分钟\n' \
+           f'价格预警间隔 {config.ALERT_PRICE_INTERVAL_MINUTE} 分钟\n' \
+           f'交易量检测时间段 {config.alert_vol_count_minute} 分钟\n' \
+           f'时间段内最小交易量：{config.alert_vol_min}\n' \
            f'Tg目标chat ID  {int(config.ALERT_PRICE_TG_CHAT)}\n' \
            f'Tg 提醒开启 {config.ALERT_PRICE_TG_ON}\n' \
            f'Server酱 提醒开启 {config.ALERT_PRICE_SERVER_JIANG_ON}\n'
     rsp = update.message.reply_markdown(text)
+    rsp.done.wait(timeout=60)
+
+
+def set_alert_vol_count_minute(update, context):
+    raw_config = configparser.ConfigParser()
+    raw_config.read(raw_config_path, encoding='utf-8')
+    logger.info('set_alert_vol_count_minute')
+    params = update.message.text.replace(f'@{config.BOT_NAME}', '')
+    params = params.replace('/set_alert_vol_count_minute', '')
+    params = params.replace(' ', '')
+    params = params.split(',')
+    if params[0] == '':
+        text = '参数错误'
+    elif update.effective_user.id in config.ADMINS:
+        config.alert_vol_count_minute = float(params[0])
+        raw_config['Alert']['alert_vol_count_minute'] = params[0]
+        with open(raw_config_path, 'w') as configfile:
+            raw_config.write(configfile)
+        text = '设置成功'
+    else:
+        text = '仅管理员可调用此方法'
+    rsp = update.message.reply_text(text)
+    rsp.done.wait(timeout=60)
+
+
+def set_alert_vol_min(update, context):
+    raw_config = configparser.ConfigParser()
+    raw_config.read(raw_config_path, encoding='utf-8')
+    logger.info('set_alert_vol_min')
+    params = update.message.text.replace(f'@{config.BOT_NAME}', '')
+    params = params.replace('/set_alert_vol_min', '')
+    params = params.replace(' ', '')
+    params = params.split(',')
+    if params[0] == '':
+        text = '参数错误'
+    elif update.effective_user.id in config.ADMINS:
+        config.alert_vol_min = float(params[0])
+        raw_config['Alert']['alert_vol_min'] = params[0]
+        with open(raw_config_path, 'w') as configfile:
+            raw_config.write(configfile)
+        text = '设置成功'
+    else:
+        text = '仅管理员可调用此方法'
+    rsp = update.message.reply_text(text)
     rsp.done.wait(timeout=60)

@@ -110,7 +110,7 @@ def main():
         # updater.bot.send_message(chat_id=config.BOT_SUPER_ADMIN, text='HotCoin Telegram Bot, 启动!!')
         updater.idle()
     except Exception as e:
-        traceback.print_exc()
+        logger.exception(e)
 
 
 def load_handlers(dispatcher: Dispatcher):
