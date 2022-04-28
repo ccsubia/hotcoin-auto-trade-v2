@@ -50,3 +50,16 @@
     - 参数7 → 每单挂单时间间隔
 - `/confirm_add_batch_push_trade` 确认执行批量挂单
 - `/reset_pending_batch_push_trade` 清除当前待执行批量挂单任务
+- `/set_alert_vol_count_minute` 设置交易量检测的时间段, 单位分钟
+    - 参数1 → 时间段,单位分钟
+- `/set_alert_vol_min` 设置时间段内需满足的最小交易量
+    - 参数1 → 需满足的最小交易量
+- `/set_auto_batch_push_trade` 预设自动交易
+    - 参数1 → 买卖方向（1⇒买，0⇒ 卖）
+    - 参数2 → 挂单数
+    - 参数3 → 开始价格
+    - 参数4 → 价格间隔（买单每单从开始价格递减，卖单反之递增）
+    - 参数5 → 开始单量
+    - 参数6 → 单量增量
+    - 参数7 → 每单挂单时间间隔
+- `/reset_auto_batch_push_trade` 清除自动交易预设
