@@ -10,6 +10,7 @@
 
 - `/id` 获取自身id
 - `/chat_id` 获取所在Chat ID
+- `/all_config_show` 展示全部配置
 - `/add_admin`  添加管理员
     - 参数1 → 添加的管理员ID
 - `/rm_admin`  添加管理员
@@ -54,7 +55,8 @@
     - 参数1 → 时间段,单位分钟
 - `/set_alert_vol_min` 设置时间段内需满足的最小交易量
     - 参数1 → 需满足的最小交易量
-- `/set_auto_batch_push_trade` 预设自动交易
+- `/auto_batch_push_trade_show` 达到最大价格自动交易配置
+- `/set_auto_batch_push_trade` 达到最大价格预设自动交易
     - 参数1 → 买卖方向（1⇒买，0⇒ 卖）
     - 参数2 → 挂单数
     - 参数3 → 开始价格
@@ -62,4 +64,14 @@
     - 参数5 → 开始单量
     - 参数6 → 单量增量
     - 参数7 → 每单挂单时间间隔
-- `/reset_auto_batch_push_trade` 清除自动交易预设
+- `/reset_auto_batch_push_trade` 清除达到最大价格自动交易预设
+- `/auto_batch_push_trade_show2` 达到最小价格自动交易配置
+- `/set_auto_batch_push_trade2` 达到最小价格预设自动交易
+    - 参数1 → 买卖方向（1⇒买，0⇒ 卖）
+    - 参数2 → 挂单数
+    - 参数3 → 开始价格
+    - 参数4 → 价格间隔（买单每单从开始价格递减，卖单反之递增）
+    - 参数5 → 开始单量
+    - 参数6 → 单量增量
+    - 参数7 → 每单挂单时间间隔
+- `/reset_auto_batch_push_trade2` 清除达到最小价格自动交易预设
