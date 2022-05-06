@@ -1,20 +1,31 @@
 [Secret]
+;机器人账号accessKey
 access_key =
+;机器人账号secretKey
 secret_key =
+;人工账号key
 other_access_keys =
 other_secret_keys =
+;telegram机器人Token
 bot_token =
+;server酱Token
 server_jiang_token =
+;telegram机器人user_name
 bot_name =
 
 [API]
+;交易对，如apg_usdt
 symbol =
+;代币名称，如APG
 symbol_name =
+;API,无需修改
 http_api = api.hotcoinfin.com
 websockets_api = wss://wss.hotcoinfin.com/trade/multiple
 
 [Admin]
+;telegram机器人超级管理员chatID
 super_admin = 705788276
+;telegram机器人管理员，多个管理员用英文逗号隔开
 admins = 705788276
 
 [Trade]
@@ -24,7 +35,9 @@ default_period_trade_amount_max = 20.2
 default_period_max_trade_amount = 100
 default_period_trade_interval_time = 20
 default_period_is_open = True
+;批量挂单开关
 batch_push_trade_on = False
+;自动交易配置1, 达到最大价格发起批量挂单, 买卖方向（1⇒买，0⇒ 卖）, 挂单数, 开始价格, 价格间隔（买单每单从开始价格递减，卖单反之递增）, 开始单量, 单量增量, 每单挂单时间间隔
 auto_batch_push_trade_type = 0
 auto_batch_push_trade_push_count = 0
 auto_batch_push_trade_start_price = 0
@@ -32,6 +45,7 @@ auto_batch_push_trade_price_step = 0
 auto_batch_push_trade_push_first_amount = 0
 auto_batch_push_trade_up_amount = 0
 auto_batch_push_trade_time_interval = 0
+;自动交易配置2, 达到最小价格发起批量挂单, 买卖方向（1⇒买，0⇒ 卖）, 挂单数, 开始价格, 价格间隔（买单每单从开始价格递减，卖单反之递增）, 开始单量, 单量增量, 每单挂单时间间隔
 auto_batch_push_trade_type2 = 1
 auto_batch_push_trade_push_count2 = 0
 auto_batch_push_trade_start_price2 = 0
@@ -39,21 +53,31 @@ auto_batch_push_trade_price_step2 = 0
 auto_batch_push_trade_push_first_amount2 = 0
 auto_batch_push_trade_up_amount2 = 0
 auto_batch_push_trade_time_interval2 = 0
+;对标交易开关
 fork_trade_on = False
+;对标交易最大交易量
 fork_trade_amount_max = 100
+;对标交易复刻盘口发起交易量区间
 fork_trade_random_amount_min = 1
 fork_trade_random_amount_max = 2
 
 [Alert]
+;server酱提醒开关
 alert_price_server_jiang_on = False
+;telegram提醒开关
 alert_price_tg_on = True
+;telegram提醒目标chatID
 alert_price_tg_chat = 705788276
+;价格预警间隔(分钟)
 alert_price_interval_minute = 1
+;预警价格范围
 alert_price_min = 0.004
 alert_price_max = 0.02
+;交易量验证时段长度(分钟)
 alert_vol_count_minute=15
+;交易量验证最小要求交易量
 alert_vol_min=100
 
 [Report]
+;报表推送telegram chatID
 report_tg_chat = 705788276
-
