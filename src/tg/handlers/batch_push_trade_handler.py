@@ -281,7 +281,7 @@ def reset_auto_batch_push_trade2(update, context):
     if not check_admin(update):
         return
 
-    config.auto_batch_push_trade_type2 = 0
+    config.auto_batch_push_trade_type2 = 1
     config.auto_batch_push_trade_push_count2 = 0
     config.auto_batch_push_trade_start_price2 = 0
     config.auto_batch_push_trade_price_step2 = 0
@@ -291,7 +291,7 @@ def reset_auto_batch_push_trade2(update, context):
 
     raw_config = configparser.ConfigParser()
     raw_config.read(raw_config_path, encoding='utf-8')
-    raw_config['Trade']['auto_batch_push_trade_type2'] = str(0)
+    raw_config['Trade']['auto_batch_push_trade_type2'] = str(1)
     raw_config['Trade']['auto_batch_push_trade_push_count2'] = str(0)
     raw_config['Trade']['auto_batch_push_trade_start_price2'] = str(0)
     raw_config['Trade']['auto_batch_push_trade_price_step2'] = str(0)
