@@ -78,7 +78,7 @@ def gen_volume_report():
         except Exception as e:
             logger.error(e)
             err_times += 1
-            traceback.print_exc()
+            logger.exception(e)
             if err_times >= 3:
                 break
             time.sleep(3)
@@ -123,7 +123,7 @@ def gen_assets_report():
         except Exception as e:
             logger.error(e)
             err_times += 1
-            traceback.print_exc()
+            logger.exception(e)
             if err_times >= 0:
                 break
             time.sleep(3)
@@ -197,7 +197,7 @@ def gen_analyze_report():
         except Exception as e:
             logger.error(e)
             err_times += 1
-            traceback.print_exc()
+            logger.exception(e)
             if err_times >= 0:
                 break
             time.sleep(3)
