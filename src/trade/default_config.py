@@ -2,25 +2,9 @@
 
 config = {
     #################################
-    # 交易调节参数设置
-    # 'key': '',
-    # 'secret': '',
-    # 下单配置
-    'price_decimal_num': 4,  # 下单价格小数点位数
-    'volumn_decimal_num': 1,  # 下单数量小数点位数
-    # 撤单配置
-    'cancel_adjustable_time': 30,  # 撤单频率，秒
-    # self交易配置
-    'self_tradeFrequence': 10,  # self交易频率，秒
-    'self_tradeMin': 20,  # self交易数量最小值
-    'self_tradeMax': 50,  # self交易数量最大值
-    # cross交易配置
-    'cross_tradeFrequence': 10,  # cross交易频率，秒
-    'cross_tradeMin': 111,  # cross交易数量最小值
-    'cross_tradeMax': 113,  # cross交易数量最大值
-    'cross_depth': 10,  # cross交易深度
-    'cross_trade_price_max': 0,  # cross交易价格的最大值，为0表示不设置
-    'cross_trade_price_min': 0,  # cross交易价格的最小值，为0表示不设置
+    'price_decimal_num': 5,  # 下单价格小数点位数
+    'volumn_decimal_num': 2,  # 下单数量小数点位数
+
     #################################
     # 波动交易配置
     # 自动配置
@@ -37,11 +21,6 @@ config = {
     'wave_trade_percentages': [-0.002, 0.002],  # wave波动交易：波动值，0.01为1%
     'wave_trade_duration_times': [1, 1],  # wave波动交易：持续时间（单位分钟）
     'wave_trade_action_nums': [2, 2],  # wave波动交易：分n次完成波动交易
-    #################################
-    # 以下是接口相关参数配置，一般不用修改
-    'symbol': 'apg_usdt',  # 币种
-    'depth_param': '{"sub": "market.apg_usdt.trade.depth"}',  # 获取深度信息的参数
-    'web_addr': 'wss://wss.hotcoinfin.com/trade/multiple',  # websocket接口地址
     #################################
     # 以下是程序运行配置，一般不用修改
     'cancel_data_dir': './data/cancel_data',  # 撤单订单数据

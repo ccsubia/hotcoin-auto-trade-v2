@@ -8,7 +8,6 @@
 import functools
 import logging
 import os
-import traceback
 from importlib import import_module
 
 import telegram.bot
@@ -98,7 +97,7 @@ logger = logging.getLogger(__name__)
 def main():
     try:
         logger.info('start bot')
-        config.load_config()
+        config.load_all_config()
         q = mq.MessageQueue()
         request = TGRequest(con_pool_size=8)
         my_bot = MQBot(config.BOT_TOKEN, request=request, mqueue=q)

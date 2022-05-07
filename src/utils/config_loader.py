@@ -55,14 +55,26 @@ class _Config:
         self._auto_batch_push_trade_push_first_amount2 = 0
         self._auto_batch_push_trade_up_amount2 = 0
         self._auto_batch_push_trade_time_interval2 = 0
-        
+
         self._fork_trade_on = False
         self._fork_trade_amount_max = 0
         self._fork_trade_random_amount_min = 0
         self._fork_trade_random_amount_max = 0
 
+        self._self_trade_interval = 10
+        self._self_tradeMin = 0
+        self._self_tradeMax = 0
+
+        self._cross_trade_interval = 10
+        self._cross_tradeMin = 0
+        self._cross_tradeMax = 1
+        self._cross_depth = 10
+        self._cross_trade_price_min = 0
+        self._cross_trade_price_max = 0
+
+        self._cancel_adjustable_time = 30
+
     def load_config(self):
-        logger.debug('Found token')
         try:
             config_file = configparser.ConfigParser(allow_no_value=True)
             config_file.read(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config.ini'),
@@ -169,6 +181,70 @@ class _Config:
         else:
             self._other_secret_keys = []
         self._depth_param = '{"sub": "market.' + self._symbol + '.trade.depth"}'
+
+    def load_self_trade_config(self):
+        try:
+            config_file = configparser.ConfigParser(allow_no_value=True)
+            config_file.read(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config.ini'),
+                             encoding='utf-8')
+        except Exception as err:
+            logger.error("Can't open the config file: ", err)
+            sys.exit(1)
+        if not config_file.has_section('Trade'):
+            logger.error("Can't find Trade section in config.")
+            sys.exit(1)
+        config_trade = config_file['Trade']
+
+        self_trade_keywords = [
+            'self_trade_interval',
+            'self_trade_min',
+            'self_trade_max',
+        ]
+        self.get_config_from_section('float', self_trade_keywords, config_trade)
+
+    def load_cross_trade_config(self):
+        try:
+            config_file = configparser.ConfigParser(allow_no_value=True)
+            config_file.read(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config.ini'),
+                             encoding='utf-8')
+        except Exception as err:
+            logger.error("Can't open the config file: ", err)
+            sys.exit(1)
+        if not config_file.has_section('Trade'):
+            logger.error("Can't find Trade section in config.")
+            sys.exit(1)
+        config_trade = config_file['Trade']
+
+        cross_trade_keywords = [
+            'cross_trade_interval',
+            'cross_trade_min',
+            'cross_trade_max',
+            'cross_depth',
+            'cross_trade_price_min',
+            'cross_trade_price_max',
+        ]
+        self.get_config_from_section('float', cross_trade_keywords, config_trade)
+
+    def load_cancel_config(self):
+        try:
+            config_file = configparser.ConfigParser(allow_no_value=True)
+            config_file.read(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config.ini'),
+                             encoding='utf-8')
+        except Exception as err:
+            logger.error("Can't open the config file: ", err)
+            sys.exit(1)
+        if not config_file.has_section('Trade'):
+            logger.error("Can't find Trade section in config.")
+            sys.exit(1)
+        config_trade = config_file['Trade']
+
+        self.get_config_from_section('float', ['cancel_adjustable_time'], config_trade)
+
+    def load_all_config(self):
+        self.load_config()
+        self.load_self_trade_config()
+        self.load_cross_trade_config()
+        self.load_cancel_config()
 
     def get_config_from_section(self, var_type, keywords, section, optional=False):
         for item in keywords:
@@ -368,55 +444,55 @@ class _Config:
     @property
     def auto_batch_push_trade_type(self):
         return self._auto_batch_push_trade_type
-    
+
     @auto_batch_push_trade_type.setter
     def auto_batch_push_trade_type(self, val):
         self._auto_batch_push_trade_type = val
-    
+
     @property
     def auto_batch_push_trade_push_count(self):
         return self._auto_batch_push_trade_push_count
-    
+
     @auto_batch_push_trade_push_count.setter
     def auto_batch_push_trade_push_count(self, val):
         self._auto_batch_push_trade_push_count = val
-        
+
     @property
     def auto_batch_push_trade_start_price(self):
         return self._auto_batch_push_trade_start_price
-    
+
     @auto_batch_push_trade_start_price.setter
     def auto_batch_push_trade_start_price(self, val):
         self._auto_batch_push_trade_start_price = val
-        
+
     @property
     def auto_batch_push_trade_price_step(self):
         return self._auto_batch_push_trade_price_step
-    
+
     @auto_batch_push_trade_price_step.setter
     def auto_batch_push_trade_price_step(self, val):
         self._auto_batch_push_trade_price_step = val
-        
+
     @property
     def auto_batch_push_trade_push_first_amount(self):
         return self._auto_batch_push_trade_push_first_amount
-    
+
     @auto_batch_push_trade_push_first_amount.setter
     def auto_batch_push_trade_push_first_amount(self, val):
         self._auto_batch_push_trade_push_first_amount = val
-        
+
     @property
     def auto_batch_push_trade_up_amount(self):
         return self._auto_batch_push_trade_up_amount
-    
+
     @auto_batch_push_trade_up_amount.setter
     def auto_batch_push_trade_up_amount(self, val):
         self._auto_batch_push_trade_up_amount = val
-    
+
     @property
     def auto_batch_push_trade_time_interval(self):
         return self._auto_batch_push_trade_time_interval
-    
+
     @auto_batch_push_trade_time_interval.setter
     def auto_batch_push_trade_time_interval(self, val):
         self._auto_batch_push_trade_time_interval = val
@@ -488,7 +564,7 @@ class _Config:
     @property
     def fork_trade_amount_max(self):
         return self._fork_trade_amount_max
-    
+
     @fork_trade_amount_max.setter
     def fork_trade_amount_max(self, val):
         self._fork_trade_amount_max = val
@@ -500,14 +576,97 @@ class _Config:
     @fork_trade_random_amount_min.setter
     def fork_trade_random_amount_min(self, val):
         self._fork_trade_random_amount_min = val
-        
+
     @property
     def fork_trade_random_amount_max(self):
         return self._fork_trade_random_amount_max
-    
+
     @fork_trade_random_amount_max.setter
     def fork_trade_random_amount_max(self, val):
         self._fork_trade_random_amount_max = val
+
+    # Self Trade
+    @property
+    def self_trade_interval(self):
+        return self._self_trade_interval
+
+    @self_trade_interval.setter
+    def self_trade_interval(self, val):
+        self._self_trade_interval = val
+
+    @property
+    def self_tradeMin(self):
+        return self._self_tradeMin
+
+    @self_tradeMin.setter
+    def self_tradeMin(self, val):
+        self._self_tradeMin = val
+
+    @property
+    def self_tradeMax(self):
+        return self._self_tradeMax
+
+    @self_tradeMax.setter
+    def self_tradeMax(self, val):
+        self._self_tradeMax = val
+
+    # Cross Trade
+    @property
+    def cross_trade_interval(self):
+        return self._cross_trade_interval
+
+    @cross_trade_interval.setter
+    def cross_trade_interval(self, val):
+        self._cross_trade_interval = val
+
+    @property
+    def cross_depth(self):
+        return self._cross_depth
+
+    @cross_depth.setter
+    def cross_depth(self, val):
+        self._cross_depth = val
+
+    @property
+    def cross_tradeMin(self):
+        return self._cross_tradeMin
+
+    @cross_tradeMin.setter
+    def cross_tradeMin(self, val):
+        self._cross_tradeMin = val
+
+    @property
+    def cross_tradeMax(self):
+        return self._cross_tradeMax
+
+    @cross_tradeMax.setter
+    def cross_tradeMax(self, val):
+        self._cross_tradeMax = val
+
+    @property
+    def cross_trade_price_min(self):
+        return self._cross_trade_price_min
+
+    @cross_trade_price_min.setter
+    def cross_trade_price_min(self, val):
+        self._cross_trade_price_min = val
+
+    @property
+    def cross_trade_price_max(self):
+        return self._cross_trade_price_max
+
+    @cross_trade_price_max.setter
+    def cross_trade_price_max(self, val):
+        self._cross_trade_price_max = val
+
+    # Cancel
+    @property
+    def cancel_adjustable_time(self):
+        return self._cancel_adjustable_time
+
+    @cancel_adjustable_time.setter
+    def cancel_adjustable_time(self, val):
+        self._cancel_adjustable_time = val
 
 
 config = _Config()

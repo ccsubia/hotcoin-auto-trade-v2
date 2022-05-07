@@ -8,7 +8,6 @@ import logging
 import os
 import random
 import time
-import traceback
 import zlib
 from collections import namedtuple
 
@@ -16,10 +15,9 @@ import pandas as pd
 import websockets
 
 from trade import utils
-from trade.hot_coin_api import CancelRecord
 from trade.default_config import config
+from trade.hot_coin_api import CancelRecord
 from utils.config_loader import config as new_config
-
 
 logger = logging.getLogger(__name__)
 
@@ -70,11 +68,11 @@ async def get_dpeth(websocket):
 # self trade
 # self交易量的区间和频率： 在买一卖一随机取价和区间，两秒后进行撤销
 async def self_trade(hot_coin, websocket):
-    reqParam = config['depth_param']
+    reqParam = '{"sub": "market.' + new_config.SYMBOL + '.trade.depth"}'
     await websocket.send(reqParam)
     self_cnt = 0
     while True:
-        new_config.load_config()
+        new_config.load_self_trade_config()
         try:
             print_prefix = f'[Self Trade: {self_cnt}]'
             logging.info(f'{print_prefix} Start time {utils.get_now_time_str("%Y/%m/%d %H:%M:%S")}...')
@@ -85,7 +83,7 @@ async def self_trade(hot_coin, websocket):
             direction = random.randint(0, 1)
             side_str = '买单' if direction else '卖单'
             tradeprice = round(random.uniform(float(buyprice[0]), float(sellprice[0])), config['price_decimal_num'])
-            tradeVolume = round(random.uniform(config['self_tradeMin'], config['self_tradeMax']),
+            tradeVolume = round(random.uniform(new_config.self_tradeMin, new_config.self_tradeMax),
                                 config['volumn_decimal_num'])
             '''if self_trade_price_max!=0 and tradeprice > self_trade_price_max:
                 tradeprice = self_trade_price_max
@@ -94,7 +92,7 @@ async def self_trade(hot_coin, websocket):
             result = hot_coin.trade(price=tradeprice, amount=tradeVolume, direction=direction)
             if hot_coin.check_trade_status(result):
                 logging.info(f'{print_prefix} 下单方向:{side_str}, 价格:{tradeprice}, 下单量:{tradeVolume}')
-                time.sleep(config['self_tradeFrequence'])  # n秒后进行反向下单
+                time.sleep(new_config.self_trade_interval)  # n秒后进行反向下单
                 result = hot_coin.trade(price=tradeprice, amount=tradeVolume, direction=1 - direction)
                 # 打印结果值
                 if hot_coin.check_trade_status(result):
@@ -114,11 +112,12 @@ async def self_trade(hot_coin, websocket):
 # cross trade
 # 在买一和买十，卖一和卖十之间随机取价和区间，每6秒下单一次
 async def cross_trade(hot_coin, websocket):
-    reqParam = config['depth_param']
+    reqParam = '{"sub": "market.' + new_config.SYMBOL + '.trade.depth"}'
     await websocket.send(reqParam)
     cross_cnt = 0
     while True:
         try:
+            new_config.load_cross_trade_config()
             print_prefix = f'[Cross Trade: {cross_cnt}]'
             logging.info(f'{print_prefix} Start time {utils.get_now_time_str("%Y/%m/%d %H:%M:%S")}...')
             buyprice, buyvolume, sellprice, sellvolume = await get_dpeth(websocket)
@@ -129,32 +128,32 @@ async def cross_trade(hot_coin, websocket):
             direction = random.randint(0, 1)  # 随机取方向
             side_str = '买单' if direction else '卖单'
             if direction:  # 如果随机数为1，挂买单
-                if len(buyprice) > config['cross_depth']:
+                if len(buyprice) > new_config.cross_depth:
                     tradeprice = round(random.uniform(float(buyprice[9]), float(buyprice[0])),
                                        config['price_decimal_num'])  # 随机取价格
-                    tradeVolume = round(random.uniform(config['cross_tradeMin'], config['cross_tradeMax']),
+                    tradeVolume = round(random.uniform(new_config.cross_tradeMin, new_config.cross_tradeMax),
                                         config['volumn_decimal_num'])  # 随机取量
                 else:
                     tradeprice = round(random.uniform(float(buyprice[-1]), float(buyprice[0])),
                                        config['price_decimal_num'])
-                    tradeVolume = round(random.uniform(config['cross_tradeMin'], config['cross_tradeMax']),
+                    tradeVolume = round(random.uniform(new_config.cross_tradeMin, new_config.cross_tradeMax),
                                         config['volumn_decimal_num'])
             else:
-                if len(sellprice) > config['cross_depth']:
+                if len(sellprice) > new_config.cross_depth:
                     tradeprice = round(random.uniform(float(sellprice[0]), float(sellprice[9])),
                                        config['price_decimal_num'])
-                    tradeVolume = round(random.uniform(config['cross_tradeMin'], config['cross_tradeMax']),
+                    tradeVolume = round(random.uniform(new_config.cross_tradeMin, new_config.cross_tradeMax),
                                         config['volumn_decimal_num'])
                 else:
                     tradeprice = round(random.uniform(float(sellprice[0]), float(sellprice[-1])),
                                        config['price_decimal_num'])
-                    tradeVolume = round(random.uniform(config['cross_tradeMin'], config['cross_tradeMax']),
+                    tradeVolume = round(random.uniform(new_config.cross_tradeMin, new_config.cross_tradeMax),
                                         config['volumn_decimal_num'])
 
-            if config['cross_trade_price_max'] != 0 and tradeprice > config['cross_trade_price_max']:
-                tradeprice = config['cross_trade_price_max']
-            if config['cross_trade_price_min'] != 0 and tradeprice < config['cross_trade_price_min']:
-                tradeprice = config['cross_trade_price_min']
+            if new_config.cross_trade_price_max != 0 and tradeprice > new_config.cross_trade_price_max:
+                tradeprice = new_config.cross_trade_price_max
+            if new_config.cross_trade_price_min != 0 and tradeprice < new_config.cross_trade_price_min:
+                tradeprice = new_config.cross_trade_price_min
             result = hot_coin.trade(price=tradeprice, amount=tradeVolume, direction=direction)
             if hot_coin.check_trade_status(result):
                 logging.info(f'{print_prefix} 下单方向:{side_str}, 价格:{tradeprice}, 下单量:{tradeVolume}')
@@ -162,7 +161,7 @@ async def cross_trade(hot_coin, websocket):
                 logging.warning(f'{print_prefix} 下单失败, retry')
                 time.sleep(2)
                 continue
-            time.sleep(config['cross_tradeFrequence'])
+            time.sleep(new_config.cross_trade_interval)
         except Exception as e:
             logger.exception(e)
             time.sleep(2)
@@ -180,8 +179,9 @@ def adjustable_cancel(hot_coin):
     f_out = open(output_fpath, 'a')
     record_cnt = 0
     cancel_cnt = 0
-    interval = config['cancel_adjustable_time']
     while True:
+        new_config.load_cancel_config()
+        interval = new_config.cancel_adjustable_time
         print_prefix = f'[Cancel: {cancel_cnt}]'
         logging.info(f'{print_prefix} Start time {utils.get_now_time_str("%Y/%m/%d %H:%M:%S")}...')
         result = hot_coin.get_open_order()
@@ -195,7 +195,7 @@ def adjustable_cancel(hot_coin):
                 # logging.info(f'{print_prefix} {order_info}')
                 # if order_info['status'] == '已撤销':
                 # cancal successful
-                interval = 12 * config['cancel_adjustable_time'] / len(order_list)
+                interval = 12 * new_config.cancel_adjustable_time / len(order_list)
                 logging.info(f"{print_prefix} 撤销订单: {order_list[index]['id']}, " \
                              f"types: {order_info['types']}, price: {order_info['price']}, " \
                              f"'count': {float(order_info['count']) - float(order_info['leftcount'])}" \
@@ -230,7 +230,7 @@ def adjustable_cancel(hot_coin):
             time.sleep(interval)  # 120s/每次撤单的延时时间为未成交单量,相当于恒定未成交单量的速度下，两分钟可以撤销完
         else:
             logging.info(f"{print_prefix} find no open order, continue")
-            time.sleep(config['cancel_adjustable_time'])
+            time.sleep(new_config.cancel_adjustable_time)
         cancel_cnt += 1
 
 
@@ -391,7 +391,7 @@ def func(target_func):
             logging.info("Start main func...")
 
             async def main_logic():
-                async with websockets.connect(config['web_addr'], ping_interval=None) as websocket:
+                async with websockets.connect(new_config.WEBSOCKETS_API, ping_interval=None) as websocket:
                     await target_func(websocket)
 
             asyncio.get_event_loop().run_until_complete(main_logic())

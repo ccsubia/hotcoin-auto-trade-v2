@@ -75,3 +75,19 @@
     - 参数6 → 单量增量
     - 参数7 → 每单挂单时间间隔
 - `/reset_auto_batch_push_trade2` 清除达到最小价格自动交易预设
+
+- `/self_trade_config_show` 查看Self 交易配置
+- `/set_self_trade_interval` 设置Self交易时间间隔(秒)
+- `/set_self_tradeMin`设置Self交易最小交易量
+- `/set_self_tradeMax`设置Self交易最大交易量
+
+- `/cross_trade_config_show`查看Cross 交易配置
+- `/set_cross_trade_interval` 设置Cross 交易时间间隔(秒)
+- `/set_cross_tradeMin`设置Cross 交易最小交易量
+- `/set_cross_tradeMax`设置Cross 交易最大交易量
+- `/set_cross_trade_price_min`设置Cross 交易最小价格
+- `/set_cross_trade_price_max`设置Cross 交易最大价格
+- `/set_cross_depth`设置Cross 交易深度
+
+- `/cancel_config_show`查看撤单配置
+- `/set_cancel_adjustable_time`设置撤单时间间隔(秒)

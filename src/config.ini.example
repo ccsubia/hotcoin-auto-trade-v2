@@ -60,6 +60,23 @@ fork_trade_amount_max = 100
 ;对标交易复刻盘口发起交易量区间
 fork_trade_random_amount_min = 1
 fork_trade_random_amount_max = 2
+;Self交易间隔(秒)
+self_trade_interval = 10
+;Self交易交易量区间
+self_tradeMin = 0
+self_tradeMax = 1
+;Cross交易间隔(秒)
+cross_trade_interval = 10
+;Cross交易交易量区间
+cross_tradeMin = 0
+cross_tradeMax = 1
+;Cross交易深度
+cross_depth = 10
+;Cross交易价格区间
+cross_trade_price_min = 0
+cross_trade_price_max = 0
+;撤单交易间隔时间(秒)
+cancel_adjustable_time = 30
 
 [Alert]
 ;server酱提醒开关
