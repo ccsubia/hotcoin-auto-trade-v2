@@ -63,13 +63,13 @@ fork_trade_random_amount_max = 2
 ;Self交易间隔(秒)
 self_trade_interval = 10
 ;Self交易交易量区间
-self_tradeMin = 0
-self_tradeMax = 1
+self_trade_min = 0
+self_trade_max = 1
 ;Cross交易间隔(秒)
 cross_trade_interval = 10
 ;Cross交易交易量区间
-cross_tradeMin = 0
-cross_tradeMax = 1
+cross_trade_min = 0
+cross_trade_max = 1
 ;Cross交易深度
 cross_depth = 10
 ;Cross交易价格区间
