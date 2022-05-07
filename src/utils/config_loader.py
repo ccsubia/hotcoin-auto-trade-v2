@@ -62,12 +62,12 @@ class _Config:
         self._fork_trade_random_amount_max = 0
 
         self._self_trade_interval = 10
-        self._self_tradeMin = 0
-        self._self_tradeMax = 0
+        self._self_trade_min = 0
+        self._self_trade_max = 0
 
         self._cross_trade_interval = 10
-        self._cross_tradeMin = 0
-        self._cross_tradeMax = 1
+        self._cross_trade_min = 0
+        self._cross_trade_max = 1
         self._cross_depth = 10
         self._cross_trade_price_min = 0
         self._cross_trade_price_max = 0
@@ -596,19 +596,19 @@ class _Config:
 
     @property
     def self_tradeMin(self):
-        return self._self_tradeMin
+        return self._self_trade_min
 
     @self_tradeMin.setter
     def self_tradeMin(self, val):
-        self._self_tradeMin = val
+        self._self_trade_min = val
 
     @property
     def self_tradeMax(self):
-        return self._self_tradeMax
+        return self._self_trade_max
 
     @self_tradeMax.setter
     def self_tradeMax(self, val):
-        self._self_tradeMax = val
+        self._self_trade_max = val
 
     # Cross Trade
     @property
@@ -629,19 +629,19 @@ class _Config:
 
     @property
     def cross_tradeMin(self):
-        return self._cross_tradeMin
+        return self._cross_trade_min
 
     @cross_tradeMin.setter
     def cross_tradeMin(self, val):
-        self._cross_tradeMin = val
+        self._cross_trade_min = val
 
     @property
     def cross_tradeMax(self):
-        return self._cross_tradeMax
+        return self._cross_trade_max
 
     @cross_tradeMax.setter
     def cross_tradeMax(self, val):
-        self._cross_tradeMax = val
+        self._cross_trade_max = val
 
     @property
     def cross_trade_price_min(self):
