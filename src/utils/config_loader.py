@@ -21,7 +21,6 @@ class _Config:
         self._http_api = ''
         self._websockets_api = ''
         self._admins = ''
-        self._depth_param = ''
         self._period_trade_on = False
         self._default_period_trade_amount_min = 0
         self._default_period_trade_amount_max = 0
@@ -60,6 +59,9 @@ class _Config:
         self._fork_trade_amount_max = 0
         self._fork_trade_random_amount_min = 0
         self._fork_trade_random_amount_max = 0
+
+        self._price_decimal_num = 8
+        self._vol_decimal_num = 2
 
         self._self_trade_interval = 10
         self._self_trade_min = 0
@@ -167,6 +169,7 @@ class _Config:
                                                'alert_price_interval_minute', 'alert_vol_count_minute', 'alert_vol_min']
                                      , config_alert)
         self.get_config_from_section('float', ['report_tg_chat'], config_report)
+        self.get_config_from_section('int', ['price_decimal_num', 'vol_decimal_num'], config_trade)
 
         if self._admins:
             self._admins = [int(item) for item in self._admins.split(',')]
@@ -180,7 +183,6 @@ class _Config:
             self._other_secret_keys = [item for item in self._other_secret_keys.split(',')]
         else:
             self._other_secret_keys = []
-        self._depth_param = '{"sub": "market.' + self._symbol + '.trade.depth"}'
 
     def load_self_trade_config(self):
         try:
@@ -201,6 +203,7 @@ class _Config:
             'self_trade_max',
         ]
         self.get_config_from_section('float', self_trade_keywords, config_trade)
+        self.get_config_from_section('int', ['price_decimal_num', 'vol_decimal_num'], config_trade)
 
     def load_cross_trade_config(self):
         try:
@@ -224,6 +227,7 @@ class _Config:
             'cross_trade_price_max',
         ]
         self.get_config_from_section('float', cross_trade_keywords, config_trade)
+        self.get_config_from_section('int', ['price_decimal_num', 'vol_decimal_num'], config_trade)
 
     def load_cancel_config(self):
         try:
@@ -308,10 +312,6 @@ class _Config:
     @property
     def WEBSOCKETS_API(self):
         return self._websockets_api
-
-    @property
-    def DEPTH_PARAM(self):
-        return self._depth_param
 
     @property
     def PERIOD_TRADE_ON(self):
@@ -667,6 +667,23 @@ class _Config:
     @cancel_adjustable_time.setter
     def cancel_adjustable_time(self, val):
         self._cancel_adjustable_time = val
+
+    # Decimal
+    @property
+    def price_decimal_num(self):
+        return self._price_decimal_num
+
+    @price_decimal_num.setter
+    def price_decimal_num(self, val):
+        self._price_decimal_num = val
+
+    @property
+    def vol_decimal_num(self):
+        return self._vol_decimal_num
+
+    @vol_decimal_num.setter
+    def vol_decimal_num(self, val):
+        self._vol_decimal_num = val
 
 
 config = _Config()

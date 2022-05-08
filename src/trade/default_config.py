@@ -2,10 +2,6 @@
 
 config = {
     #################################
-    'price_decimal_num': 5,  # 下单价格小数点位数
-    'volumn_decimal_num': 2,  # 下单数量小数点位数
-
-    #################################
     # 波动交易配置
     # 自动配置
     'wave_trade_auto_on': False,  # 是否启用自动波动交易, True or False

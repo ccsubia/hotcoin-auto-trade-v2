@@ -77,6 +77,10 @@ cross_trade_price_min = 0
 cross_trade_price_max = 0
 ;撤单交易间隔时间(秒)
 cancel_adjustable_time = 30
+;价格精度
+price_decimal_num = 8
+;交易量精度
+vol_decimal_num = 2
 
 [Alert]
 ;server酱提醒开关

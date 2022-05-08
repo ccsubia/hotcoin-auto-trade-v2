@@ -356,7 +356,7 @@ def get_current_price():
     ticker_data = hot_coin.get_ticker(86400)
     if ticker_data['code'] == 200 and 'data' in ticker_data:
         price = float(ticker_data['data'][-1][4])
-        price = round(price, 5)
+        price = round(price, config.price_decimal_num)
         return price
     else:
         price = 0

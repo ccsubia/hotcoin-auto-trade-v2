@@ -82,9 +82,9 @@ async def self_trade(hot_coin, websocket):
                 continue
             direction = random.randint(0, 1)
             side_str = '买单' if direction else '卖单'
-            tradeprice = round(random.uniform(float(buyprice[0]), float(sellprice[0])), config['price_decimal_num'])
+            tradeprice = round(random.uniform(float(buyprice[0]), float(sellprice[0])), new_config.price_decimal_num)
             tradeVolume = round(random.uniform(new_config.self_tradeMin, new_config.self_tradeMax),
-                                config['volumn_decimal_num'])
+                                new_config.vol_decimal_num)
             '''if self_trade_price_max!=0 and tradeprice > self_trade_price_max:
                 tradeprice = self_trade_price_max
             if self_trade_price_min!=0 and tradeprice < self_trade_price_min:
@@ -130,25 +130,25 @@ async def cross_trade(hot_coin, websocket):
             if direction:  # 如果随机数为1，挂买单
                 if len(buyprice) > new_config.cross_depth:
                     tradeprice = round(random.uniform(float(buyprice[9]), float(buyprice[0])),
-                                       config['price_decimal_num'])  # 随机取价格
+                                       new_config.price_decimal_num)  # 随机取价格
                     tradeVolume = round(random.uniform(new_config.cross_tradeMin, new_config.cross_tradeMax),
-                                        config['volumn_decimal_num'])  # 随机取量
+                                        new_config.vol_decimal_num)  # 随机取量
                 else:
                     tradeprice = round(random.uniform(float(buyprice[-1]), float(buyprice[0])),
-                                       config['price_decimal_num'])
+                                       new_config.price_decimal_num)
                     tradeVolume = round(random.uniform(new_config.cross_tradeMin, new_config.cross_tradeMax),
-                                        config['volumn_decimal_num'])
+                                        new_config.vol_decimal_num)
             else:
                 if len(sellprice) > new_config.cross_depth:
                     tradeprice = round(random.uniform(float(sellprice[0]), float(sellprice[9])),
-                                       config['price_decimal_num'])
+                                       new_config.price_decimal_num)
                     tradeVolume = round(random.uniform(new_config.cross_tradeMin, new_config.cross_tradeMax),
-                                        config['volumn_decimal_num'])
+                                        new_config.vol_decimal_num)
                 else:
                     tradeprice = round(random.uniform(float(sellprice[0]), float(sellprice[-1])),
-                                       config['price_decimal_num'])
+                                       new_config.price_decimal_num)
                     tradeVolume = round(random.uniform(new_config.cross_tradeMin, new_config.cross_tradeMax),
-                                        config['volumn_decimal_num'])
+                                        new_config.vol_decimal_num)
 
             if new_config.cross_trade_price_max != 0 and tradeprice > new_config.cross_trade_price_max:
                 tradeprice = new_config.cross_trade_price_max
