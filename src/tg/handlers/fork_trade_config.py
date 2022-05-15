@@ -6,6 +6,7 @@ import os
 
 from telegram.ext import Dispatcher, CommandHandler
 from utils.config_loader import config
+from utils.restricted import restricted_admin
 
 logger = logging.getLogger(__name__)
 
@@ -20,6 +21,7 @@ def init(dispatcher: Dispatcher):
     dispatcher.add_handler(CommandHandler('set_fork_trade_amount_max', set_fork_trade_amount_max))
     dispatcher.add_handler(CommandHandler('set_fork_trade_random_amount_min', set_fork_trade_random_amount_min))
     dispatcher.add_handler(CommandHandler('set_fork_trade_random_amount_max', set_fork_trade_random_amount_max))
+    dispatcher.add_handler(CommandHandler('set_fork_trade_interval', set_fork_trade_interval))
 
 
 def check_admin(update):
@@ -134,4 +136,20 @@ def fork_trade_config_show(update, context):
            f'买卖1最大挂单数量：{config.fork_trade_amount_max}\n' \
            f'买卖2-5随机挂单量区间 {config.fork_trade_random_amount_min} - {config.fork_trade_random_amount_max}'
     rsp = update.message.reply_markdown(text)
+    rsp.done.wait(timeout=60)
+
+
+@restricted_admin
+def set_fork_trade_interval(update, context):
+    logger.info('set_fork_trade_interval')
+    if not context.args or not context.args[0].isdigit:
+        update.message.reply_text('参数错误： /set_fork_trade_interval <间隔时间>')
+        return
+    config.fork_trade_interval = float(context.args[0])
+    raw_config = configparser.ConfigParser()
+    raw_config.read(raw_config_path, encoding='utf-8')
+    raw_config['Trade']['fork_trade_interval'] = context.args[0]
+    with open(raw_config_path, 'w') as configfile:
+        raw_config.write(configfile)
+    rsp = update.message.reply_text('设置成功')
     rsp.done.wait(timeout=60)

@@ -60,6 +60,8 @@ fork_trade_amount_max = 100
 ;对标交易复刻盘口发起交易量区间
 fork_trade_random_amount_min = 1
 fork_trade_random_amount_max = 2
+;对标交易间隔(秒)
+fork_trade_interval = 5
 ;Self交易间隔(秒)
 self_trade_interval = 10
 ;Self交易交易量区间

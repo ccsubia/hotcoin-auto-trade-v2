@@ -59,6 +59,7 @@ class _Config:
         self._fork_trade_amount_max = 0
         self._fork_trade_random_amount_min = 0
         self._fork_trade_random_amount_max = 0
+        self._fork_trade_interval = 0
 
         self._price_decimal_num = 8
         self._vol_decimal_num = 2
@@ -127,6 +128,7 @@ class _Config:
             'fork_trade_amount_max',
             'fork_trade_random_amount_min',
             'fork_trade_random_amount_max',
+            'fork_trade_interval',
         ]
         config_trade_keywords_bool = [
             'period_trade_on',
@@ -584,6 +586,14 @@ class _Config:
     @fork_trade_random_amount_max.setter
     def fork_trade_random_amount_max(self, val):
         self._fork_trade_random_amount_max = val
+
+    @property
+    def fork_trade_interval(self):
+        return self._fork_trade_interval
+
+    @fork_trade_interval.setter
+    def fork_trade_interval(self, val):
+        self._fork_trade_interval = val
 
     # Self Trade
     @property

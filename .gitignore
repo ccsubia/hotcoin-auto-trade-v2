@@ -5,3 +5,4 @@ src/__pycache__
 src/config.ini
 src/logs
 src/test
+src/data
