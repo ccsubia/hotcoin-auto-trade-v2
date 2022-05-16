@@ -32,7 +32,7 @@ def batch_push_trade(type, push_count, start_price, price_step, push_first_amoun
                     logger.warning(f'{print_prefix} 价格超出预警范围')
                     break
                 logger.info(f'{print_prefix} 买单 {round(float(start_price) - i * float(price_step), config.price_decimal_num)} {round(float(push_first_amount) + i * float(up_amount), config.vol_decimal_num)}')
-                hot_coin.buy(round(float(start_price) - i * float(price_step), config.price_decimal_num), round(float(push_first_amount) + i * float(up_amount), 4))
+                hot_coin.buy(round(float(start_price) - i * float(price_step), config.price_decimal_num), round(float(push_first_amount) + i * float(up_amount), config.vol_decimal_num))
                 remind_tg(config.ALERT_PRICE_TG_CHAT, f'#{config.SYMBOL_NAME} \n'
                                                       f'发起批量挂单\n'
                                                       f'方向：买单\n'

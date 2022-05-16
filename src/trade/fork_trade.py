@@ -158,7 +158,7 @@ async def fork_trade(hot_coin, fork_coin_websocket):
                             {'price': trade_s1_price, 'amount': trade_s1_amount, 'trade_type': trade_s1_type})
 
                     # 挂单买卖2-3
-                    for i in range(2):
+                    for i in range(4):
                         push_sell_price = float(
                             fork_coin_depth_data['data']['depth']['asks'][i + 1][0]) * fork_coin_scale
                         push_sell_price = round(push_sell_price, config.price_decimal_num)

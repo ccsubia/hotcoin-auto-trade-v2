@@ -76,11 +76,13 @@ def batch_push_trade_off(update, context):
     rsp = update.message.reply_text(text)
     rsp.done.wait(timeout=60)
 
+
 def batch_push_trade_status_show(update, context):
     text = f'#{config.SYMBOL_NAME} \n' \
            f'是否开启批量挂单：{config.batch_push_trade_on}'
     rsp = update.message.reply_markdown(text)
     rsp.done.wait(timeout=60)
+
 
 def pending_batch_push_trade_show(update, context):
     logger.info('pending_batch_push_trade_show')
@@ -89,7 +91,7 @@ def pending_batch_push_trade_show(update, context):
     else:
         text = f'*#{config.SYMBOL_NAME} 待确认批量挂单*'
         for item in pending_batch_push_trade_task:
-            if item[0] == 1:
+            if int(item[0]) == 1:
                 type = '买单'
             else:
                 type = '卖单'
@@ -273,7 +275,7 @@ def set_auto_batch_push_trade2(update, context):
 
     rsp = update.message.reply_text(text)
     rsp.done.wait(timeout=60)
-    auto_batch_push_trade_show(update, context)
+    auto_batch_push_trade_show2(update, context)
 
 
 def reset_auto_batch_push_trade2(update, context):
