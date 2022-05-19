@@ -225,22 +225,27 @@ def run_sched():
             account_info_data = new_hot_coin.get_account_info()
             if 'data' in account_info_data and 'wallet' in account_info_data['data']:
                 bot_usdt_balance = 0
+                bot_usdt_free_balance = 0
                 for item in account_info_data['data']['wallet']:
                     if item['symbol'] == 'USDT':
                         bot_usdt_balance = float(item['total']) + float(item['frozen'])
+                        bot_usdt_free_balance = float(item['total'])
                         logger.info(f'{print_prefix} 当前Bot账户USDT余额：{bot_usdt_balance}')
                         break
                 if datetime.datetime.now().minute == 0 or accountClass.BOT_USDT_BALANCE == 0:
                     accountClass.BOT_USDT_BALANCE = bot_usdt_balance
                     remind_tg(new_config.ALERT_PRICE_TG_CHAT, f'#报告\n'
-                                                              f'[Bot账户] 当前USDT余额：{bot_usdt_balance}')
+                                                              f'[Bot账户] 当前USDT余额：{bot_usdt_balance}\n'
+                                                              f'可用余额：{bot_usdt_free_balance}')
                 else:
                     if accountClass.BOT_USDT_BALANCE - bot_usdt_balance > new_config.alert_usdt_balance_over_amount:
                         logger.warning(f'{print_prefix} [Bot账户] USDT余额异常\n'
-                                       f'当前USDT余额：{bot_usdt_balance}')
+                                       f'当前USDT余额：{bot_usdt_balance}\n'
+                                       f'可用余额：{bot_usdt_free_balance}')
                         remind_tg(new_config.ALERT_PRICE_TG_CHAT, f'#预警\n'
                                                                   f'[Bot账户] USDT余额异常\n'
-                                                                  f'当前USDT余额：{bot_usdt_balance}')
+                                                                  f'当前USDT余额：{bot_usdt_balance}\n'
+                                                                  f'可用余额：{bot_usdt_free_balance}')
             else:
                 logger.warning(f'{print_prefix} 账户信息获取失败 {account_info_data}')
                 remind_tg(new_config.ALERT_PRICE_TG_CHAT, '账户信息获取失败，请检查IP是否被封禁')
@@ -250,9 +255,11 @@ def run_sched():
                 account_info_data = new_hot_coin.get_account_info()
                 if 'data' in account_info_data and 'wallet' in account_info_data['data']:
                     usdt_balance = 0
+                    usdt_free_balance = 0
                     for item in account_info_data['data']['wallet']:
                         if item['symbol'] == 'USDT':
                             usdt_balance = float(item['total']) + float(item['frozen'])
+                            usdt_free_balance = float(item['total'])
                             logger.info(f'{print_prefix} 当前人工账户{index + 1} USDT余额：{usdt_balance}')
                             break
                     if len(accountClass.OTHER_ACCOUNT_USDT_BALANCE) == index:
@@ -260,14 +267,17 @@ def run_sched():
                     if datetime.datetime.now().minute == 0 or accountClass.OTHER_ACCOUNT_USDT_BALANCE[index] == 0:
                         accountClass.OTHER_ACCOUNT_USDT_BALANCE[index] = usdt_balance
                         remind_tg(new_config.ALERT_PRICE_TG_CHAT, f'#报告\n'
-                                                                  f'[人工账户{index + 1}] 当前USDT余额：{usdt_balance}')
+                                                                  f'[人工账户{index + 1}] 当前USDT余额：{usdt_balance}\n'
+                                                                  f'可用余额：{usdt_free_balance}')
                     else:
                         if accountClass.OTHER_ACCOUNT_USDT_BALANCE[index] - usdt_balance > new_config.alert_usdt_balance_over_amount:
                             logger.warning(f'{print_prefix} [人工账户{index + 1}] USDT余额异常\n'
-                                           f'当前USDT余额：{usdt_balance}')
+                                           f'当前USDT余额：{usdt_balance}\n'
+                                           f'可用余额：{usdt_free_balance}')
                             remind_tg(new_config.ALERT_PRICE_TG_CHAT, f'#预警\n'
                                                                       f'[人工账户{index + 1}] USDT余额异常\n'
-                                                                      f'当前USDT余额：{usdt_balance}')
+                                                                      f'当前USDT余额：{usdt_balance}\n'
+                                                                      f'可用余额：{usdt_free_balance}')
                 else:
                     logger.warning(f'{print_prefix} 账户信息获取失败 {account_info_data}')
                     remind_tg(new_config.ALERT_PRICE_TG_CHAT, '账户信息获取失败，请检查IP是否被封禁')
