@@ -100,6 +100,8 @@ alert_price_max = 0.02
 alert_vol_count_minute=15
 ;交易量验证最小要求交易量
 alert_vol_min=100
+;预警USDT减少数量
+alert_usdt_balance_over_amount = 1
 
 [Report]
 ;报表推送telegram chatID

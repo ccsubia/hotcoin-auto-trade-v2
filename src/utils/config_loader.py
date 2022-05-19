@@ -36,6 +36,7 @@ class _Config:
         self._alert_price_max = 0
         self._alert_vol_count_minute = 0
         self._alert_vol_min = 0
+        self._alert_usdt_balance_over_amount = 0
 
         self._report_tg_chat = 0
 
@@ -168,7 +169,8 @@ class _Config:
 
         self.get_config_from_section('bool', ['alert_price_server_jiang_on', 'alert_price_tg_on'], config_alert)
         self.get_config_from_section('float', ['alert_price_min', 'alert_price_max', 'alert_price_tg_chat',
-                                               'alert_price_interval_minute', 'alert_vol_count_minute', 'alert_vol_min']
+                                               'alert_price_interval_minute', 'alert_vol_count_minute', 'alert_vol_min',
+                                               'alert_usdt_balance_over_amount']
                                      , config_alert)
         self.get_config_from_section('float', ['report_tg_chat'], config_report)
         self.get_config_from_section('int', ['price_decimal_num', 'vol_decimal_num'], config_trade)
@@ -402,6 +404,14 @@ class _Config:
     @alert_vol_min.setter
     def alert_vol_min(self, val):
         self._alert_vol_min = val
+
+    @property
+    def alert_usdt_balance_over_amount(self):
+        return self._alert_usdt_balance_over_amount
+
+    @alert_usdt_balance_over_amount.setter
+    def alert_usdt_balance_over_amount(self, val):
+        self._alert_usdt_balance_over_amount = val
 
     @property
     def REPORT_TG_CHAT(self):

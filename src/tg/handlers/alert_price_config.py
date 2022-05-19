@@ -6,6 +6,7 @@ import os
 
 from telegram.ext import Dispatcher, CommandHandler
 from utils.config_loader import config
+from utils.restricted import restricted_admin
 
 logger = logging.getLogger(__name__)
 
@@ -26,6 +27,8 @@ def init(dispatcher: Dispatcher):
 
     dispatcher.add_handler(CommandHandler('set_alert_vol_count_minute', set_alert_vol_count_minute))
     dispatcher.add_handler(CommandHandler('set_alert_vol_min', set_alert_vol_min))
+
+    dispatcher.add_handler(CommandHandler('set_alert_usdt_balance_over', set_alert_usdt_balance_over_amount))
 
 
 def check_admin(update):
@@ -194,7 +197,8 @@ def alert_config_show(update, context):
            f'时间段内最小交易量：{config.alert_vol_min}\n' \
            f'Tg目标chat ID  {int(config.ALERT_PRICE_TG_CHAT)}\n' \
            f'Tg 提醒开启 {config.ALERT_PRICE_TG_ON}\n' \
-           f'Server酱 提醒开启 {config.ALERT_PRICE_SERVER_JIANG_ON}\n'
+           f'Server酱 提醒开启 {config.ALERT_PRICE_SERVER_JIANG_ON}\n' \
+           f'1小时USDT余额最大减少数量 {config.alert_usdt_balance_over_amount}\n'
     rsp = update.message.reply_markdown(text)
     rsp.done.wait(timeout=60)
 
@@ -240,4 +244,20 @@ def set_alert_vol_min(update, context):
     else:
         text = '仅管理员可调用此方法'
     rsp = update.message.reply_text(text)
+    rsp.done.wait(timeout=60)
+
+
+@restricted_admin
+def set_alert_usdt_balance_over_amount(update, context):
+    logger.info('set_alert_usdt_balance_over_amount')
+    if not context.args or not context.args[0].isdigit:
+        update.message.reply_text('参数错误： /set_alert_usdt_balance_over <预警USDT余额减少数量>')
+        return
+    config.alert_usdt_balance_over_amount = float(context.args[0])
+    raw_config = configparser.ConfigParser()
+    raw_config.read(raw_config_path, encoding='utf-8')
+    raw_config['Alert']['alert_usdt_balance_over_amount'] = context.args[0]
+    with open(raw_config_path, 'w') as configfile:
+        raw_config.write(configfile)
+    rsp = update.message.reply_text('设置成功')
     rsp.done.wait(timeout=60)

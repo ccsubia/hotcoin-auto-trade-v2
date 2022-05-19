@@ -29,6 +29,7 @@
     - 参数1 → 预警间隔时间，单位分钟
 - `/set_alert_price_tg_chat` 设置预警发送对话
     - 参数1 → 预警发送到TG对话ID
+- `set_alert_usdt_balance_over` 设置预警USDT减少数量
 - `/fork_trade_on`  开启对标交易
 - `/fork_trade_off` 关闭对标交易
 - `/fork_trade_config_show` 查看当前对标交易配置

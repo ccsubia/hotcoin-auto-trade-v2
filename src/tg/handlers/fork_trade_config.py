@@ -133,6 +133,7 @@ def fork_trade_config_show(update, context):
     logger.info('fork_trade_config_show')
     text = f'*#{config.SYMBOL_NAME} 对标交易配置*\n' \
            f'是否开启对标交易：{config.fork_trade_on}\n' \
+           f'对标间隔时间：{config.fork_trade_interval}s\n' \
            f'买卖1最大挂单数量：{config.fork_trade_amount_max}\n' \
            f'买卖2-5随机挂单量区间 {config.fork_trade_random_amount_min} - {config.fork_trade_random_amount_max}'
     rsp = update.message.reply_markdown(text)
