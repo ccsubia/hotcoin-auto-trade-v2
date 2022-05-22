@@ -79,6 +79,8 @@ cross_trade_price_min = 0
 cross_trade_price_max = 0
 ;撤单交易间隔时间(秒)
 cancel_adjustable_time = 30
+;撤销指定分钟前的所有委托单
+cancel_before_order_minutes = 60
 ;价格精度
 price_decimal_num = 8
 ;交易量精度

@@ -77,6 +77,7 @@ class _Config:
         self._cross_trade_price_max = 0
 
         self._cancel_adjustable_time = 30
+        self._cancel_before_order_minutes = 60
 
     def load_config(self):
         try:
@@ -246,7 +247,7 @@ class _Config:
             sys.exit(1)
         config_trade = config_file['Trade']
 
-        self.get_config_from_section('float', ['cancel_adjustable_time'], config_trade)
+        self.get_config_from_section('float', ['cancel_adjustable_time', 'cancel_before_order_minutes'], config_trade)
 
     def load_all_config(self):
         self.load_config()
@@ -687,6 +688,14 @@ class _Config:
     @cancel_adjustable_time.setter
     def cancel_adjustable_time(self, val):
         self._cancel_adjustable_time = val
+
+    @property
+    def cancel_before_order_minutes(self):
+        return self._cancel_before_order_minutes
+
+    @cancel_before_order_minutes.setter
+    def cancel_before_order_minutes(self, val):
+        self._cancel_before_order_minutes = val
 
     # Decimal
     @property

@@ -2,6 +2,7 @@
 import asyncio
 import datetime
 import logging
+import math
 import multiprocessing
 import time
 
@@ -285,6 +286,45 @@ def run_sched():
             logger.exception(e)
             remind_tg(new_config.ALERT_PRICE_TG_CHAT, f'{print_prefix} 遇到未知错误: ' + str(e))
 
+    @sched.scheduled_job('interval', seconds=60)
+    def cancelOldOrder():
+        print_prefix = f'[cancelOldOrder]'
+        try:
+            new_config.load_cancel_config()
+            print(new_config.cancel_before_order_minutes)
+            logger.info(f'{print_prefix}')
+            new_hot_coin = HotCoin(symbol=new_config.SYMBOL)
+            new_hot_coin.auth(key=new_config.ACCESS_KEY, secret=new_config.SECRET_KEY)
+            page = 1
+            toCancelOrders = []
+            while True:
+                logger.debug(f'{print_prefix} Get Page {page}')
+                currentOrderData = new_hot_coin.get_open_order(page)
+                if 'data' in currentOrderData and 'entrutsCur' in currentOrderData['data']:
+                    if len(currentOrderData['data']['entrutsCur']) > 0:
+                        nowTimestamp = currentOrderData['time'] / 1000
+                        logger.debug(nowTimestamp)
+                        for item in currentOrderData['data']['entrutsCur']:
+                            orderTimestamp = datetime.datetime.strptime(item['time'], '%Y-%m-%d %H:%M:%S').timestamp()
+                            if orderTimestamp < nowTimestamp - new_config.cancel_before_order_minutes * 60:
+                                toCancelOrders.append(item['id'])
+                        page += 1
+                    else:
+                        logger.debug(toCancelOrders)
+                        if len(toCancelOrders) > 0:
+                            for n in range(math.ceil(len(toCancelOrders) / 10)):
+                                logger.info(f'{print_prefix} 批量撤单，IDS => {toCancelOrders[n * 10: (n+1) * 10]}')
+                                postStr = str(toCancelOrders[n * 10: (n+1) * 10]).replace('[', '').replace(']', '').replace(' ', '')
+                                logger.debug(postStr)
+                                # logger.info(new_hot_coin.cancel_order_batch(postStr))
+                        break
+                else:
+                    logger.warning(f'{print_prefix} 委托单数据获取错误')
+                    break
+        except Exception as e:
+            logger.exception(e)
+            remind_tg(new_config.ALERT_PRICE_TG_CHAT, f'{print_prefix} 遇到未知错误: ' + str(e))
+
     sched.start()
 
 
@@ -300,10 +340,10 @@ if __name__ == '__main__':
     pool = multiprocessing.Pool(processes=12)
     pool.apply_async(func, (hot_coin, hot_coin_func_trade.self_trade,))
     pool.apply_async(func, (hot_coin, hot_coin_func_trade.cross_trade,))
-    pool.apply_async(cancel_pool, (hot_coin,))
+    # pool.apply_async(cancel_pool, (hot_coin,))
     pool.apply_async(save_trades_pool, (hot_coin,))
     pool.apply_async(print_trade_pool)
-    pool.apply_async(print_cancel_pool)
+    # pool.apply_async(print_cancel_pool)
     pool.apply_async(wave_trade_pool, (hot_coin,))
     # pool.apply_async(func, (hot_coin, period_trade.period_trade,))
     pool.apply_async(func, (hot_coin, alert_price,))

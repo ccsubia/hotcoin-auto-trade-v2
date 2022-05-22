@@ -4,7 +4,6 @@ import base64
 import hashlib
 import hmac
 import logging
-import traceback
 import urllib
 from collections import namedtuple
 from datetime import datetime
@@ -129,13 +128,17 @@ class HotCoin:
         """get specfic order(done)"""
         return self.api_key_request('GET', 'order/detailById', id=order_id)
 
-    def get_open_order(self):
+    def get_open_order(self, page):
         """get specfic order(done)"""
-        return self.api_key_request('GET', 'order/entrust', symbol=self.symbol, type=1, count=100)
+        return self.api_key_request('GET', 'order/entrust', symbol=self.symbol, type=1, page=page, count=100)
 
     def cancel_order(self, order_id):
         """cancel specfic order(done)"""
         return self.api_key_request('POST', 'order/cancel', id=order_id)
+
+    def cancel_order_batch(self, order_ids):
+        """cancel specfic order(done)"""
+        return self.api_key_request('POST', 'order/batchCancelOrders', orderIds=order_ids)
 
     def get_current_order(self):
         """get current orders"""

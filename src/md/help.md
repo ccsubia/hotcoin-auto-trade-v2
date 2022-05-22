@@ -93,6 +93,7 @@
 
 - `/cancel_config_show`查看撤单配置
 - `/set_cancel_adjustable_time`设置撤单时间间隔(秒)
+- `/set_cancel_before_order_minutes` 设置撤销委托单大于距当前分钟数
 
 - `/decimal_config_show` 查看精度配置
 - `/set_price_decimal_num` 设置价格精度
