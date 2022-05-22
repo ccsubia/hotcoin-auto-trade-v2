@@ -53,6 +53,14 @@ auto_batch_push_trade_price_step2 = 0
 auto_batch_push_trade_push_first_amount2 = 0
 auto_batch_push_trade_up_amount2 = 0
 auto_batch_push_trade_time_interval2 = 0
+;默认批量挂单配置, 买卖方向（1⇒买，0⇒ 卖）, 挂单数, 开始价格, 价格间隔（买单每单从开始价格递减，卖单反之递增）, 开始单量, 单量增量, 每单挂单时间间隔
+default_batch_push_trade_type = 0
+default_batch_push_trade_push_count = 0
+default_batch_push_trade_start_price = 0
+default_batch_push_trade_price_step = 0
+default_batch_push_trade_push_first_amount = 0
+default_batch_push_trade_up_amount = 0
+default_batch_push_trade_time_interval = 0
 ;对标交易开关
 fork_trade_on = False
 ;对标交易最大交易量

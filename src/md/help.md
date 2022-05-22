@@ -51,6 +51,8 @@
     - 参数5 → 开始单量
     - 参数6 → 单量增量
     - 参数7 → 每单挂单时间间隔
+- `/fast_add_batch_push_trade` 快速添加批量挂单
+  - 无参数
 - `/confirm_add_batch_push_trade` 确认执行批量挂单
 - `/reset_pending_batch_push_trade` 清除当前待执行批量挂单任务
 - `/set_alert_vol_count_minute` 设置交易量检测的时间段, 单位分钟
@@ -77,6 +79,15 @@
     - 参数6 → 单量增量
     - 参数7 → 每单挂单时间间隔
 - `/reset_auto_batch_push_trade2` 清除达到最小价格自动交易预设
+- `/default_batch_push_trade_show` 查看默认批量挂单配置
+- `/set_default_batch_push_trade` 设置默认批量挂单配置
+    - 参数1 → 买卖方向（1⇒买，0⇒ 卖）
+    - 参数2 → 挂单数
+    - 参数3 → 开始价格
+    - 参数4 → 价格间隔（买单每单从开始价格递减，卖单反之递增）
+    - 参数5 → 开始单量
+    - 参数6 → 单量增量
+    - 参数7 → 每单挂单时间间隔
 
 - `/self_trade_config_show` 查看Self 交易配置
 - `/set_self_trade_interval` 设置Self交易时间间隔(秒)

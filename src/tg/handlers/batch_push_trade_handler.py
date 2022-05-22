@@ -35,7 +35,8 @@ def init(dispatcher: Dispatcher):
     dispatcher.add_handler(CommandHandler('set_auto_batch_push_trade2', set_auto_batch_push_trade2))
     dispatcher.add_handler(CommandHandler('reset_auto_batch_push_trade2', reset_auto_batch_push_trade2))
 
-    # dispatcher.add_handler(CommandHandler('default_batch_push_trade_config', default_period_config))
+    dispatcher.add_handler(CommandHandler('default_batch_push_trade_show', default_batch_push_trade_show))
+    dispatcher.add_handler(CommandHandler('set_default_batch_push_trade', set_default_batch_push_trade))
 
 
 def check_admin(update):
@@ -193,6 +194,63 @@ def set_auto_batch_push_trade(update, context):
     auto_batch_push_trade_show(update, context)
 
 
+def default_batch_push_trade_show(update, context):
+    logger.info('default_batch_push_trade_show')
+    config.load_config()
+    text = f'*#{config.SYMBOL_NAME} 默认批量挂单配置*'
+    if config.default_batch_push_trade_type == 1:
+        type = '买单'
+    else:
+        type = '卖单'
+    text = text + f"\n类型: {type}\n" \
+                  f"挂单数: {config.default_batch_push_trade_push_count}\n" \
+                  f"开始价格: {config.default_batch_push_trade_start_price}\n" \
+                  f"价格间隔: {config.default_batch_push_trade_price_step}\n" \
+                  f"开始数量: {config.default_batch_push_trade_push_first_amount}\n" \
+                  f"数量增量: {config.default_batch_push_trade_up_amount}\n" \
+                  f"间隔时间: {config.default_batch_push_trade_time_interval}"
+    rsp = update.message.reply_markdown(text)
+    rsp.done.wait(timeout=60)
+
+
+def set_default_batch_push_trade(update, context):
+    logger.info('set_default_batch_push_trade')
+    if not check_admin(update):
+        return
+
+    params = update.message.text.replace(f'@{config.BOT_NAME}', '')
+    params = params.replace('/set_default_batch_push_trade', '')
+    params = params.replace(' ', '')
+    params = params.split(',')
+    if not len(params) == 7:
+        text = '参数错误'
+    else:
+        config.default_batch_push_trade_type = float(params[0])
+        config.default_batch_push_trade_push_count = float(params[1])
+        config.default_batch_push_trade_start_price = float(params[2])
+        config.default_batch_push_trade_price_step = float(params[3])
+        config.default_batch_push_trade_push_first_amount = float(params[4])
+        config.default_batch_push_trade_up_amount = float(params[5])
+        config.default_batch_push_trade_time_interval = float(params[6])
+
+        raw_config = configparser.ConfigParser()
+        raw_config.read(raw_config_path, encoding='utf-8')
+        raw_config['Trade']['default_batch_push_trade_type'] = params[0]
+        raw_config['Trade']['default_batch_push_trade_push_count'] = params[1]
+        raw_config['Trade']['default_batch_push_trade_start_price'] = params[2]
+        raw_config['Trade']['default_batch_push_trade_price_step'] = params[3]
+        raw_config['Trade']['default_batch_push_trade_push_first_amount'] = params[4]
+        raw_config['Trade']['default_batch_push_trade_up_amount'] = params[5]
+        raw_config['Trade']['default_batch_push_trade_time_interval'] = params[6]
+        with open(raw_config_path, 'w') as configfile:
+            raw_config.write(configfile)
+        text = '设置成功'
+
+    rsp = update.message.reply_text(text)
+    rsp.done.wait(timeout=60)
+    default_batch_push_trade_show(update, context)
+
+
 def reset_auto_batch_push_trade(update, context):
     logger.info('reset_auto_batch_push_trade')
     if not check_admin(update):
@@ -307,8 +365,26 @@ def reset_auto_batch_push_trade2(update, context):
 
 
 def fast_add_batch_push_trade(update, context):
-    logger.info(fast_add_batch_push_trade)
-    return
+    logger.info('fast_add_batch_push_trade')
+    if not check_admin(update):
+        return
+    else:
+        BatchPushTrade = namedtuple('BatchPushTrade',
+                                    ['type', 'push_count', 'start_price', 'price_step', 'push_first_amount',
+                                     'up_amount', 'time_interval'])
+        pending_batch_push_trade_task.append(BatchPushTrade(
+            config.default_batch_push_trade_type,
+            config.default_batch_push_trade_push_count,
+            config.default_batch_push_trade_start_price,
+            config.default_batch_push_trade_price_step,
+            config.default_batch_push_trade_push_first_amount,
+            config.default_batch_push_trade_up_amount,
+            config.default_batch_push_trade_time_interval
+        ))
+        text = '添加成功'
+    rsp = update.message.reply_text(text)
+    rsp.done.wait(timeout=60)
+    pending_batch_push_trade_show(update, context)
 
 
 def confirm_add_batch_push_trade(update, context):
