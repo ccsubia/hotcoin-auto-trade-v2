@@ -28,9 +28,9 @@ def batch_push_trade(type, push_count, start_price, price_step, push_first_amoun
 
         for i in range(int(push_count)):
             if int(type) == 1:
-                if not config.ALERT_PRICE_MIN < float(start_price) - i * float(price_step) < config.ALERT_PRICE_MAX:
-                    logger.warning(f'{print_prefix} 价格超出预警范围')
-                    break
+                # if not config.ALERT_PRICE_MIN < float(start_price) - i * float(price_step) < config.ALERT_PRICE_MAX:
+                #     logger.warning(f'{print_prefix} 价格超出预警范围')
+                #     break
                 logger.info(f'{print_prefix} 买单 {round(float(start_price) - i * float(price_step), config.price_decimal_num)} {round(float(push_first_amount) + i * float(up_amount), config.vol_decimal_num)}')
                 hot_coin.buy(round(float(start_price) - i * float(price_step), config.price_decimal_num), round(float(push_first_amount) + i * float(up_amount), config.vol_decimal_num))
                 remind_tg(config.ALERT_PRICE_TG_CHAT, f'#{config.SYMBOL_NAME} \n'
@@ -39,9 +39,9 @@ def batch_push_trade(type, push_count, start_price, price_step, push_first_amoun
                                                       f'价格：{round(float(start_price) - i * float(price_step), config.price_decimal_num)}\n'
                                                       f'数量：{round(float(push_first_amount) + i * float(up_amount), config.vol_decimal_num)}\n')
             else:
-                if not config.ALERT_PRICE_MIN < float(start_price) + i * float(price_step) < config.ALERT_PRICE_MAX:
-                    logger.warning(f'{print_prefix} 价格超出预警范围')
-                    break
+                # if not config.ALERT_PRICE_MIN < float(start_price) + i * float(price_step) < config.ALERT_PRICE_MAX:
+                #     logger.warning(f'{print_prefix} 价格超出预警范围')
+                #     break
                 logger.info(f'{print_prefix} 卖单 {round(float(start_price) + i * float(price_step), config.price_decimal_num)} {round(float(push_first_amount) + i * float(up_amount), config.vol_decimal_num)}')
                 hot_coin.sell(round(float(start_price) + i * float(price_step), config.price_decimal_num), round(float(push_first_amount) + i * float(up_amount), config.vol_decimal_num))
                 remind_tg(config.ALERT_PRICE_TG_CHAT, f'#{config.SYMBOL_NAME} \n'
