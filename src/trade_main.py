@@ -194,10 +194,15 @@ def run_sched():
             logger.info(f'{print_prefix}')
             new_hot_coin = HotCoin(symbol=new_config.SYMBOL)
             ticker_data = new_hot_coin.get_ticker(step=60)
-            if 'data' in ticker_data:
+            if 'data' in ticker_data and 'time' in ticker_data:
+                current_time = float(ticker_data['time'])
+                ticker_data = ticker_data['data'][::-1]
                 minutes_vol = 0
-                for i in range(int(new_config.alert_vol_count_minute)):
-                    minutes_vol += float(ticker_data['data'][-(i + 1)][5])
+                for item in ticker_data:
+                    if float(item[0]) < current_time - (new_config.alert_vol_count_minute * 60 * 1000):
+                        break
+                    minutes_vol += float(item[5])
+
                 if minutes_vol < new_config.alert_vol_min:
                     logger.warning(f'{print_prefix} 交易量异常，{new_config.alert_vol_count_minute}分钟内交易 {minutes_vol}，'
                                    f'小于设定最小值{new_config.alert_vol_min}')
