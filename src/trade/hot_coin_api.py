@@ -128,7 +128,7 @@ class HotCoin:
         """get specfic order(done)"""
         return self.api_key_request('GET', 'order/detailById', id=order_id)
 
-    def get_open_order(self, page):
+    def get_open_order(self, page=1):
         """get specfic order(done)"""
         return self.api_key_request('GET', 'order/entrust', symbol=self.symbol, type=1, page=page, count=100)
 
