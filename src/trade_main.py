@@ -321,7 +321,7 @@ def run_sched():
                                 logger.info(f'{print_prefix} 批量撤单，IDS => {toCancelOrders[n * 10: (n+1) * 10]}')
                                 postStr = str(toCancelOrders[n * 10: (n+1) * 10]).replace('[', '').replace(']', '').replace(' ', '')
                                 logger.debug(postStr)
-                                # logger.info(new_hot_coin.cancel_order_batch(postStr))
+                                logger.info(new_hot_coin.cancel_order_batch(postStr))
                         break
                 else:
                     logger.warning(f'{print_prefix} 委托单数据获取错误')
