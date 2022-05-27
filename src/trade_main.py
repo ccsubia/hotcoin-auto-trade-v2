@@ -13,6 +13,7 @@ from tg.bot import main as tg_bot
 from trade import hot_coin_func_trade, utils
 from trade.alert_price import alert_price
 from trade.default_config import config
+from trade.fill_depth import fill_depth
 from trade.fork_trade import fork_trade
 from trade.hot_coin_api import HotCoin
 from utils.account_info import accountClass
@@ -353,6 +354,7 @@ if __name__ == '__main__':
     # pool.apply_async(func, (hot_coin, period_trade.period_trade,))
     pool.apply_async(func, (hot_coin, alert_price,))
     pool.apply_async(func, (hot_coin, fork_trade,))
+    pool.apply_async(func, (hot_coin, fill_depth,))
     pool.apply_async(tg_bot)
     pool.apply_async(run_sched)
     pool.close()
