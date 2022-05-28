@@ -56,11 +56,24 @@ class _Config:
         self._auto_batch_push_trade_up_amount2 = 0
         self._auto_batch_push_trade_time_interval2 = 0
 
+        self._default_batch_push_trade_type = 0
+        self._default_batch_push_trade_push_count = 0
+        self._default_batch_push_trade_start_price = 0
+        self._default_batch_push_trade_price_step = 0
+        self._default_batch_push_trade_push_first_amount = 0
+        self._default_batch_push_trade_up_amount = 0
+        self._default_batch_push_trade_time_interval = 0
+
         self._fork_trade_on = False
         self._fork_trade_amount_max = 0
         self._fork_trade_random_amount_min = 0
         self._fork_trade_random_amount_max = 0
         self._fork_trade_interval = 0
+
+        self._fill_depth_on = False
+        self._fill_depth_random_amount_min = 0
+        self._fill_depth_random_amount_max = 0
+        self._fill_depth_interval = 5
 
         self._price_decimal_num = 8
         self._vol_decimal_num = 2
@@ -131,12 +144,16 @@ class _Config:
             'fork_trade_random_amount_min',
             'fork_trade_random_amount_max',
             'fork_trade_interval',
+            'fill_depth_random_amount_min',
+            'fill_depth_random_amount_max',
+            'fill_depth_interval',
         ]
         config_trade_keywords_bool = [
             'period_trade_on',
             'default_period_is_open',
             'batch_push_trade_on',
-            'fork_trade_on'
+            'fork_trade_on',
+            'fill_depth_on',
         ]
 
         config_auto_push_trade_keywords_float = [
@@ -154,6 +171,13 @@ class _Config:
             'auto_batch_push_trade_push_first_amount2',
             'auto_batch_push_trade_up_amount2',
             'auto_batch_push_trade_time_interval2',
+            'default_batch_push_trade_type',
+            'default_batch_push_trade_push_count',
+            'default_batch_push_trade_start_price',
+            'default_batch_push_trade_price_step',
+            'default_batch_push_trade_push_first_amount',
+            'default_batch_push_trade_up_amount',
+            'default_batch_push_trade_time_interval',
         ]
 
         self.get_config_from_section('str', config_secret_keywords_str, config_secret)
@@ -567,6 +591,62 @@ class _Config:
         self._auto_batch_push_trade_time_interval2 = val
 
     @property
+    def default_batch_push_trade_type(self):
+        return self._default_batch_push_trade_type
+
+    @default_batch_push_trade_type.setter
+    def default_batch_push_trade_type(self, val):
+        self._default_batch_push_trade_type = val
+
+    @property
+    def default_batch_push_trade_push_count(self):
+        return self._default_batch_push_trade_push_count
+
+    @default_batch_push_trade_push_count.setter
+    def default_batch_push_trade_push_count(self, val):
+        self._default_batch_push_trade_push_count = val
+
+    @property
+    def default_batch_push_trade_start_price(self):
+        return self._default_batch_push_trade_start_price
+
+    @default_batch_push_trade_start_price.setter
+    def default_batch_push_trade_start_price(self, val):
+        self._default_batch_push_trade_start_price = val
+
+    @property
+    def default_batch_push_trade_price_step(self):
+        return self._default_batch_push_trade_price_step
+
+    @default_batch_push_trade_price_step.setter
+    def default_batch_push_trade_price_step(self, val):
+        self._default_batch_push_trade_price_step = val
+
+    @property
+    def default_batch_push_trade_push_first_amount(self):
+        return self._default_batch_push_trade_push_first_amount
+
+    @default_batch_push_trade_push_first_amount.setter
+    def default_batch_push_trade_push_first_amount(self, val):
+        self._default_batch_push_trade_push_first_amount = val
+
+    @property
+    def default_batch_push_trade_up_amount(self):
+        return self._default_batch_push_trade_up_amount
+
+    @default_batch_push_trade_up_amount.setter
+    def default_batch_push_trade_up_amount(self, val):
+        self._default_batch_push_trade_up_amount = val
+
+    @property
+    def default_batch_push_trade_time_interval(self):
+        return self._default_batch_push_trade_time_interval
+
+    @default_batch_push_trade_time_interval.setter
+    def default_batch_push_trade_time_interval(self, val):
+        self._default_batch_push_trade_time_interval = val
+
+    @property
     def fork_trade_on(self):
         return self._fork_trade_on
 
@@ -605,6 +685,38 @@ class _Config:
     @fork_trade_interval.setter
     def fork_trade_interval(self, val):
         self._fork_trade_interval = val
+
+    @property
+    def fill_depth_on(self):
+        return self._fill_depth_on
+
+    @fill_depth_on.setter
+    def fill_depth_on(self, val):
+        self._fill_depth_on = val
+
+    @property
+    def fill_depth_random_amount_min(self):
+        return self._fill_depth_random_amount_min
+
+    @fill_depth_random_amount_min.setter
+    def fill_depth_random_amount_min(self, val):
+        self._fill_depth_random_amount_min = val
+
+    @property
+    def fill_depth_random_amount_max(self):
+        return self._fill_depth_random_amount_max
+
+    @fill_depth_random_amount_max.setter
+    def fill_depth_random_amount_max(self, val):
+        self._fill_depth_random_amount_max = val
+
+    @property
+    def fill_depth_interval(self):
+        return self._fill_depth_interval
+
+    @fill_depth_interval.setter
+    def fill_depth_interval(self, val):
+        self._fill_depth_interval = val
 
     # Self Trade
     @property

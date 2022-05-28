@@ -72,6 +72,14 @@ fork_trade_random_amount_max = 2
 fork_trade_interval = 5
 ;Self交易间隔(秒)
 self_trade_interval = 10
+;补单20档开关
+fill_depth_on = True
+;补单20档单量范围最低值
+fill_depth_random_amount_min = 0
+;补单20档单量范围最大值
+fill_depth_random_amount_max = 5
+;补单20档时间间隔(秒)
+fill_depth_interval = 5
 ;Self交易交易量区间
 self_trade_min = 0
 self_trade_max = 1
