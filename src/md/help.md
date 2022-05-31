@@ -40,6 +40,7 @@
 - `/set_fork_trade_random_amount_max` 设置买卖2-3随机最高交易量
     - 参数1 → 买卖2-3随机最高交易量
 - `/set_fork_trade_interval` 设置fork交易间隔(秒)
+- `/set_fork_symbol` 设置对标代币
 - `/batch_push_trade_on`开启批量挂单
 - `/batch_push_trade_off`关闭批量挂单
 - `/pending_batch_push_trade_show`查看当前待执行批量挂单任务

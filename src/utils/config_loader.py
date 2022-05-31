@@ -69,6 +69,7 @@ class _Config:
         self._fork_trade_random_amount_min = 0
         self._fork_trade_random_amount_max = 0
         self._fork_trade_interval = 0
+        self._fork_symbol = 'btc'
 
         self._fill_depth_on = False
         self._fill_depth_random_amount_min = 0
@@ -199,6 +200,7 @@ class _Config:
                                      , config_alert)
         self.get_config_from_section('float', ['report_tg_chat'], config_report)
         self.get_config_from_section('int', ['price_decimal_num', 'vol_decimal_num'], config_trade)
+        self.get_config_from_section('str', ['fork_symbol'], config_trade)
 
         if self._admins:
             self._admins = [int(item) for item in self._admins.split(',')]
@@ -685,6 +687,14 @@ class _Config:
     @fork_trade_interval.setter
     def fork_trade_interval(self, val):
         self._fork_trade_interval = val
+
+    @property
+    def fork_symbol(self):
+        return self._fork_symbol
+
+    @fork_symbol.setter
+    def fork_symbol(self, val):
+        self._fork_symbol = val
 
     @property
     def fill_depth_on(self):

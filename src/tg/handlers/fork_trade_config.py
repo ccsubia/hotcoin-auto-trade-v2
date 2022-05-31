@@ -22,6 +22,7 @@ def init(dispatcher: Dispatcher):
     dispatcher.add_handler(CommandHandler('set_fork_trade_random_amount_min', set_fork_trade_random_amount_min))
     dispatcher.add_handler(CommandHandler('set_fork_trade_random_amount_max', set_fork_trade_random_amount_max))
     dispatcher.add_handler(CommandHandler('set_fork_trade_interval', set_fork_trade_interval))
+    dispatcher.add_handler(CommandHandler('set_fork_symbol', set_fork_symbol))
 
 
 def check_admin(update):
@@ -133,6 +134,7 @@ def fork_trade_config_show(update, context):
     logger.info('fork_trade_config_show')
     text = f'*#{config.SYMBOL_NAME} 对标交易配置*\n' \
            f'是否开启对标交易：{config.fork_trade_on}\n' \
+           f'对标代币：{config.fork_symbol}\n' \
            f'对标间隔时间：{config.fork_trade_interval}s\n' \
            f'买卖1最大挂单数量：{config.fork_trade_amount_max}\n' \
            f'买卖2-5随机挂单量区间 {config.fork_trade_random_amount_min} - {config.fork_trade_random_amount_max}'
@@ -150,6 +152,22 @@ def set_fork_trade_interval(update, context):
     raw_config = configparser.ConfigParser()
     raw_config.read(raw_config_path, encoding='utf-8')
     raw_config['Trade']['fork_trade_interval'] = context.args[0]
+    with open(raw_config_path, 'w') as configfile:
+        raw_config.write(configfile)
+    rsp = update.message.reply_text('设置成功')
+    rsp.done.wait(timeout=60)
+
+
+@restricted_admin
+def set_fork_symbol(update, context):
+    logger.info('set_fork_symbol')
+    if not context.args or not context.args[0].isdigit:
+        update.message.reply_text('参数错误： /set_fork_symbol <对标代币>')
+        return
+    config.fork_symbol = context.args[0]
+    raw_config = configparser.ConfigParser()
+    raw_config.read(raw_config_path, encoding='utf-8')
+    raw_config['Trade']['fork_symbol'] = context.args[0]
     with open(raw_config_path, 'w') as configfile:
         raw_config.write(configfile)
     rsp = update.message.reply_text('设置成功')

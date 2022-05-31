@@ -34,6 +34,7 @@ async def fork_trade(hot_coin, fork_coin_websocket):
                 while True:
                     print_prefix = f'[Fork Trade: {self_cnt}]'
                     config.load_config()
+                    fork_symbol = (config.fork_symbol + '_usdt').lower()
 
                     # Check fork_trade_on
                     if not config.fork_trade_on:
@@ -55,11 +56,11 @@ async def fork_trade(hot_coin, fork_coin_websocket):
                         logger.info(f'{print_prefix} WSS => fork_coin_data_price: {fork_coin_data_price}')
                         # logger.info(f'{print_prefix} WSS =>  {fork_coin_ret["data"]}')
                     else:
-                        fork_coin_ticker_data = HotCoin(symbol='btc_usdt').get_24h_ticker()
+                        fork_coin_ticker_data = HotCoin(symbol=fork_symbol).get_24h_ticker()
                         fork_coin_data_price = 0
                         if 'ticker' in fork_coin_ticker_data:
                             for item in fork_coin_ticker_data['ticker']:
-                                if item['symbol'] == 'btc_usdt':
+                                if item['symbol'] == fork_symbol:
                                     fork_coin_data_price = item['last']
                                     logger.info(
                                         f'{print_prefix} HTTP => fork_coin_data_price: {fork_coin_data_price}')
@@ -99,7 +100,7 @@ async def fork_trade(hot_coin, fork_coin_websocket):
                         break
 
                     # Get Depth
-                    fork_coin_depth_data = HotCoin(symbol='btc_usdt').get_depth()
+                    fork_coin_depth_data = HotCoin(symbol=fork_symbol).get_depth()
                     self_coin_depth_data = hot_coin.get_depth()
                     # logger.info(fork_coin_depth_data)
                     # logger.info(self_coin_depth_data)
