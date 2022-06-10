@@ -244,9 +244,9 @@ def run_sched():
                         break
                 if datetime.datetime.now().minute == 0 or accountClass.BOT_USDT_BALANCE == 0:
                     accountClass.BOT_USDT_BALANCE = bot_usdt_balance
-                    remind_tg(new_config.ALERT_PRICE_TG_CHAT, f'#报告\n'
-                                                              f'[Bot账户] 当前USDT余额：{bot_usdt_balance}\n'
-                                                              f'可用余额：{bot_usdt_free_balance}')
+                    remind_tg(new_config.REPORT_TG_CHAT, f'#报告\n'
+                                                         f'[Bot账户] 当前USDT余额：{bot_usdt_balance}\n'
+                                                         f'可用余额：{bot_usdt_free_balance}')
                 else:
                     if accountClass.BOT_USDT_BALANCE - bot_usdt_balance > new_config.alert_usdt_balance_over_amount:
                         logger.warning(f'{print_prefix} [Bot账户] USDT余额异常\n'
@@ -276,9 +276,9 @@ def run_sched():
                         accountClass.OTHER_ACCOUNT_USDT_BALANCE.append(0)
                     if datetime.datetime.now().minute == 0 or accountClass.OTHER_ACCOUNT_USDT_BALANCE[index] == 0:
                         accountClass.OTHER_ACCOUNT_USDT_BALANCE[index] = usdt_balance
-                        remind_tg(new_config.ALERT_PRICE_TG_CHAT, f'#报告\n'
-                                                                  f'[人工账户{index + 1}] 当前USDT余额：{usdt_balance}\n'
-                                                                  f'可用余额：{usdt_free_balance}')
+                        remind_tg(new_config.REPORT_TG_CHAT, f'#报告\n'
+                                                             f'[人工账户{index + 1}] 当前USDT余额：{usdt_balance}\n'
+                                                             f'可用余额：{usdt_free_balance}')
                     else:
                         if accountClass.OTHER_ACCOUNT_USDT_BALANCE[
                             index] - usdt_balance > new_config.alert_usdt_balance_over_amount:
