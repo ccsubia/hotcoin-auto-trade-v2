@@ -17,10 +17,16 @@ def init(dispatcher: Dispatcher):
     """Provide handlers initialization."""
     dispatcher.add_handler(CommandHandler('fork_trade_on', fork_trade_on))
     dispatcher.add_handler(CommandHandler('fork_trade_off', fork_trade_off))
+    dispatcher.add_handler(CommandHandler('auto_fork_trade_config_on', auto_fork_trade_config_on))
+    dispatcher.add_handler(CommandHandler('auto_fork_trade_config_off', auto_fork_trade_config_off))
     dispatcher.add_handler(CommandHandler('fork_trade_config_show', fork_trade_config_show))
     dispatcher.add_handler(CommandHandler('set_fork_trade_amount_max', set_fork_trade_amount_max))
     dispatcher.add_handler(CommandHandler('set_fork_trade_random_amount_min', set_fork_trade_random_amount_min))
     dispatcher.add_handler(CommandHandler('set_fork_trade_random_amount_max', set_fork_trade_random_amount_max))
+    dispatcher.add_handler(CommandHandler('set_fork_trade_random_amount_min_min', set_fork_trade_random_amount_min_min))
+    dispatcher.add_handler(CommandHandler('set_fork_trade_random_amount_min_max', set_fork_trade_random_amount_min_max))
+    dispatcher.add_handler(CommandHandler('set_fork_trade_random_amount_max_min', set_fork_trade_random_amount_max_min))
+    dispatcher.add_handler(CommandHandler('set_fork_trade_random_amount_max_max', set_fork_trade_random_amount_max_max))
     dispatcher.add_handler(CommandHandler('set_fork_trade_interval', set_fork_trade_interval))
     dispatcher.add_handler(CommandHandler('set_fork_symbol', set_fork_symbol))
 
@@ -100,6 +106,74 @@ def set_fork_trade_random_amount_max(update, context):
     rsp.done.wait(timeout=60)
 
 
+@restricted_admin
+def set_fork_trade_random_amount_min_min(update, context):
+    logger.info('set_fork_trade_random_amount_min_min')
+    if not context.args or not context.args[0].isdigit:
+        update.message.reply_text('参数错误： /set_fork_trade_random_amount_min_min <自动调整复刻盘口最小交易量区间最小值>')
+        return
+    config.fork_trade_random_amount_min_min = float(context.args[0])
+    raw_config = configparser.ConfigParser()
+    raw_config.read(raw_config_path, encoding='utf-8')
+    raw_config['Trade']['fork_trade_random_amount_min_min'] = context.args[0]
+    with open(raw_config_path, 'w') as configfile:
+        raw_config.write(configfile)
+    rsp = update.message.reply_text('设置成功')
+    rsp.done.wait(timeout=60)
+    fork_trade_config_show(update, context)
+
+
+@restricted_admin
+def set_fork_trade_random_amount_min_max(update, context):
+    logger.info('set_fork_trade_random_amount_min_max')
+    if not context.args or not context.args[0].isdigit:
+        update.message.reply_text('参数错误： /set_fork_trade_random_amount_min_max <自动调整复刻盘口最小交易量区间最大值>')
+        return
+    config.fork_trade_random_amount_min_max = float(context.args[0])
+    raw_config = configparser.ConfigParser()
+    raw_config.read(raw_config_path, encoding='utf-8')
+    raw_config['Trade']['fork_trade_random_amount_min_max'] = context.args[0]
+    with open(raw_config_path, 'w') as configfile:
+        raw_config.write(configfile)
+    rsp = update.message.reply_text('设置成功')
+    rsp.done.wait(timeout=60)
+    fork_trade_config_show(update, context)
+
+
+@restricted_admin
+def set_fork_trade_random_amount_max_min(update, context):
+    logger.info('set_fork_trade_random_amount_max_min')
+    if not context.args or not context.args[0].isdigit:
+        update.message.reply_text('参数错误： /set_fork_trade_random_amount_max_min <自动调整复刻盘口最大交易量区间最小值>')
+        return
+    config.fork_trade_random_amount_max_min = float(context.args[0])
+    raw_config = configparser.ConfigParser()
+    raw_config.read(raw_config_path, encoding='utf-8')
+    raw_config['Trade']['fork_trade_random_amount_max_min'] = context.args[0]
+    with open(raw_config_path, 'w') as configfile:
+        raw_config.write(configfile)
+    rsp = update.message.reply_text('设置成功')
+    rsp.done.wait(timeout=60)
+    fork_trade_config_show(update, context)
+
+
+@restricted_admin
+def set_fork_trade_random_amount_max_max(update, context):
+    logger.info('set_fork_trade_random_amount_max_max')
+    if not context.args or not context.args[0].isdigit:
+        update.message.reply_text('参数错误： /set_fork_trade_random_amount_max_max <自动调整复刻盘口最大交易量区间最大值>')
+        return
+    config.fork_trade_random_amount_max_max = float(context.args[0])
+    raw_config = configparser.ConfigParser()
+    raw_config.read(raw_config_path, encoding='utf-8')
+    raw_config['Trade']['fork_trade_random_amount_max_max'] = context.args[0]
+    with open(raw_config_path, 'w') as configfile:
+        raw_config.write(configfile)
+    rsp = update.message.reply_text('设置成功')
+    rsp.done.wait(timeout=60)
+    fork_trade_config_show(update, context)
+
+
 def fork_trade_on(update, context):
     raw_config = configparser.ConfigParser()
     raw_config.read(raw_config_path, encoding='utf-8')
@@ -121,8 +195,36 @@ def fork_trade_off(update, context):
     logger.info('fork_trade_off')
     if not check_admin(update):
         return
-    config.ALERT_PRICE_TG_ON = False
+    config.fork_trade_on = False
     raw_config['Trade']['fork_trade_on'] = 'False'
+    with open(raw_config_path, 'w') as configfile:
+        raw_config.write(configfile)
+    text = '设置成功'
+    rsp = update.message.reply_text(text)
+    rsp.done.wait(timeout=60)
+
+
+@restricted_admin
+def auto_fork_trade_config_on(update, context):
+    raw_config = configparser.ConfigParser()
+    raw_config.read(raw_config_path, encoding='utf-8')
+    logger.info('auto_fork_trade_config_on')
+    config.auto_fork_trade_config_on = True
+    raw_config['Trade']['auto_fork_trade_config_on'] = 'True'
+    with open(raw_config_path, 'w') as configfile:
+        raw_config.write(configfile)
+    text = '设置成功'
+    rsp = update.message.reply_text(text)
+    rsp.done.wait(timeout=60)
+
+
+@restricted_admin
+def auto_fork_trade_config_off(update, context):
+    raw_config = configparser.ConfigParser()
+    raw_config.read(raw_config_path, encoding='utf-8')
+    logger.info('auto_fork_trade_config_off')
+    config.auto_fork_trade_config_on = False
+    raw_config['Trade']['auto_fork_trade_config_on'] = 'False'
     with open(raw_config_path, 'w') as configfile:
         raw_config.write(configfile)
     text = '设置成功'
@@ -132,12 +234,16 @@ def fork_trade_off(update, context):
 
 def fork_trade_config_show(update, context):
     logger.info('fork_trade_config_show')
+    config.load_config()
     text = f'*#{config.SYMBOL_NAME} 对标交易配置*\n' \
            f'是否开启对标交易：{config.fork_trade_on}\n' \
            f'对标代币：{config.fork_symbol}\n' \
            f'对标间隔时间：{config.fork_trade_interval}s\n' \
            f'买卖1最大挂单数量：{config.fork_trade_amount_max}\n' \
-           f'买卖2-5随机挂单量区间 {config.fork_trade_random_amount_min} - {config.fork_trade_random_amount_max}'
+           f'买卖2-5随机挂单量区间 {config.fork_trade_random_amount_min} - {config.fork_trade_random_amount_max}\n' \
+           f'是否开启自动配置：{config.auto_fork_trade_config_on}\n' \
+           f'自动调整复刻盘口最小交易量区间：{config.fork_trade_random_amount_min_min} - {config.fork_trade_random_amount_min_max}\n' \
+           f'自动调整复刻盘口最大交易量区间：{config.fork_trade_random_amount_max_min} - {config.fork_trade_random_amount_max_max}'
     rsp = update.message.reply_markdown(text)
     rsp.done.wait(timeout=60)
 

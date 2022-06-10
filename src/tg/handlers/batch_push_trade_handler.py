@@ -54,7 +54,7 @@ def batch_push_trade_on(update, context):
     logger.info('batch_push_trade_on')
     if not check_admin(update):
         return
-    config.ALERT_PRICE_TG_ON = True
+    config.batch_push_trade_on = True
     raw_config['Trade']['batch_push_trade_on'] = 'True'
     with open(raw_config_path, 'w') as configfile:
         raw_config.write(configfile)
@@ -69,7 +69,7 @@ def batch_push_trade_off(update, context):
     logger.info('batch_push_trade_off')
     if not check_admin(update):
         return
-    config.ALERT_PRICE_TG_ON = False
+    config.batch_push_trade_on = False
     raw_config['Trade']['batch_push_trade_on'] = 'False'
     with open(raw_config_path, 'w') as configfile:
         raw_config.write(configfile)

@@ -38,10 +38,9 @@ async def alert_price(hot_coin, websocket):
             print_prefix = f'[Alert Price: {self_cnt}]'
             config.load_config()
 
-            # Check PERIOD_TRADE_ON
             if not config.ALERT_PRICE_TG_ON and not config.ALERT_PRICE_SERVER_JIANG_ON:
                 logger.warning(f'{print_prefix} Alert Price turn off , Sleep {config.ALERT_PRICE_INTERVAL_MINUTE} 分钟')
-                time.sleep(config.ALERT_PRICE_INTERVAL_MINUTE)
+                time.sleep(config.ALERT_PRICE_INTERVAL_MINUTE * 60)
             logger.info(f'{print_prefix} Start time {utils.get_now_time_str("%Y/%m/%d %H:%M:%S")}...')
 
             # Get Price
