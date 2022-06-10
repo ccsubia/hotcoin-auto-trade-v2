@@ -135,13 +135,13 @@ async def fork_trade(hot_coin, fork_coin_websocket):
 
                     # 发起卖单，消耗买单1
                     trade_b1_price = round(self_coin_trade_b1_price, config.price_decimal_num)
-                    trade_b1_amount = round(self_coin_b1_amount * 1, config.vol_decimal_num)
+                    trade_b1_amount = round(self_coin_b1_amount * 1.1, config.vol_decimal_num)
                     trade_b1_type = 0
                     # print('trade_b1_price', trade_b1_price, 'trade_b1_amount', trade_b1_amount, 'trade_b1_type', trade_b1_type)
 
                     # 发起买单，消耗卖单1
                     trade_s1_price = round(self_coin_trade_s1_price, config.price_decimal_num)
-                    trade_s1_amount = round(self_coin_s1_amount * 1, config.vol_decimal_num)
+                    trade_s1_amount = round(self_coin_s1_amount * 1.1, config.vol_decimal_num)
                     trade_s1_type = 1
                     # print('trade_s1_price', trade_s1_price, 'trade_s1_amount', trade_s1_amount, 'trade_s1_type', trade_s1_type)
 
