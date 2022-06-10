@@ -39,6 +39,12 @@
     - 参数1 → 买卖2-3随机最低交易量
 - `/set_fork_trade_random_amount_max` 设置买卖2-3随机最高交易量
     - 参数1 → 买卖2-3随机最高交易量
+- `/auto_fork_trade_config_on`  开启自动调整对标交易配置
+- `/auto_fork_trade_config_off` 关闭自动调整对标交易配置
+- `/set_fork_random_amount_min_min` 自动调整复刻盘口最小交易量区间最小值
+- `/set_fork_random_amount_min_max` 自动调整复刻盘口最小交易量区间最大值
+- `/set_fork_random_amount_max_min` 自动调整复刻盘口最大交易量区间最小值
+- `/set_fork_random_amount_max_max` 自动调整复刻盘口最大交易量区间最大值
 - `/set_fork_trade_interval` 设置fork交易间隔(秒)
 - `/set_fork_symbol` 设置对标代币
 - `/batch_push_trade_on`开启批量挂单
