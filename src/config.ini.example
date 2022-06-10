@@ -63,15 +63,27 @@ default_batch_push_trade_up_amount = 0
 default_batch_push_trade_time_interval = 0
 ;对标交易开关
 fork_trade_on = False
+;是否开启自动调整对标交易配置
+auto_fork_trade_config_on = False
 ;对标交易最大交易量
 fork_trade_amount_max = 100
 ;对标交易复刻盘口发起交易量区间
 fork_trade_random_amount_min = 1
 fork_trade_random_amount_max = 2
+;自动调整复刻盘口最小交易量区间
+fork_trade_random_amount_min_min = 1
+fork_trade_random_amount_min_max = 2
+;自动调整复刻盘口最大交易量区间
+fork_trade_random_amount_max_min = 10
+fork_trade_random_amount_max_max = 20
 ;对标币种
 fork_symbol = btc
 ;对标交易间隔(秒)
 fork_trade_interval = 5
+;目标交易量时间段(分钟)
+target_vol_interval_minutes = 60
+;目标时间段内交易量
+target_vol = 30
 ;补单20档开关
 fill_depth_on = True
 ;补单20档单量范围最低值

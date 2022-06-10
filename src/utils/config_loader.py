@@ -68,8 +68,16 @@ class _Config:
         self._fork_trade_amount_max = 0
         self._fork_trade_random_amount_min = 0
         self._fork_trade_random_amount_max = 0
+        self._auto_fork_trade_config_on = False
+        self._fork_trade_random_amount_min_min = 1
+        self._fork_trade_random_amount_min_max = 2
+        self._fork_trade_random_amount_max_min = 10
+        self._fork_trade_random_amount_max_max = 20
         self._fork_trade_interval = 0
         self._fork_symbol = 'btc'
+
+        self._target_vol_interval_minutes = 60
+        self._target_vol = 500
 
         self._fill_depth_on = False
         self._fill_depth_random_amount_min = 0
@@ -144,16 +152,23 @@ class _Config:
             'fork_trade_amount_max',
             'fork_trade_random_amount_min',
             'fork_trade_random_amount_max',
+            'fork_trade_random_amount_min_min',
+            'fork_trade_random_amount_min_max',
+            'fork_trade_random_amount_max_min',
+            'fork_trade_random_amount_max_max',
             'fork_trade_interval',
             'fill_depth_random_amount_min',
             'fill_depth_random_amount_max',
             'fill_depth_interval',
+            'target_vol_interval_minutes',
+            'target_vol',
         ]
         config_trade_keywords_bool = [
             'period_trade_on',
             'default_period_is_open',
             'batch_push_trade_on',
             'fork_trade_on',
+            'auto_fork_trade_config_on',
             'fill_depth_on',
         ]
 
@@ -681,6 +696,46 @@ class _Config:
         self._fork_trade_random_amount_max = val
 
     @property
+    def auto_fork_trade_config_on(self):
+        return self._auto_fork_trade_config_on
+    
+    @auto_fork_trade_config_on.setter
+    def auto_fork_trade_config_on(self, val):
+        self._auto_fork_trade_config_on = val
+    
+    @property
+    def fork_trade_random_amount_min_min(self):
+        return self._fork_trade_random_amount_min_min
+    
+    @fork_trade_random_amount_min_min.setter
+    def fork_trade_random_amount_min_min(self, val):
+        self._fork_trade_random_amount_min_min = val
+    
+    @property
+    def fork_trade_random_amount_min_max(self):
+        return self._fork_trade_random_amount_min_max
+    
+    @fork_trade_random_amount_min_max.setter
+    def fork_trade_random_amount_min_max(self, val):
+        self._fork_trade_random_amount_min_max = val
+    
+    @property
+    def fork_trade_random_amount_max_min(self):
+        return self._fork_trade_random_amount_max_min
+    
+    @fork_trade_random_amount_max_min.setter
+    def fork_trade_random_amount_max_min(self, val):
+        self._fork_trade_random_amount_max_min = val
+    
+    @property
+    def fork_trade_random_amount_max_max(self):
+        return self._fork_trade_random_amount_max_max
+    
+    @fork_trade_random_amount_max_max.setter
+    def fork_trade_random_amount_max_max(self, val):
+        self._fork_trade_random_amount_max_max = val
+    
+    @property
     def fork_trade_interval(self):
         return self._fork_trade_interval
 
@@ -695,6 +750,22 @@ class _Config:
     @fork_symbol.setter
     def fork_symbol(self, val):
         self._fork_symbol = val
+        
+    @property
+    def target_vol_interval_minutes(self):
+        return self._target_vol_interval_minutes
+    
+    @target_vol_interval_minutes.setter
+    def target_vol_interval_minutes(self, val):
+        self._target_vol_interval_minutes = val
+
+    @property
+    def target_vol(self):
+        return self._target_vol
+    
+    @target_vol.setter
+    def target_vol(self, val):
+        self._target_vol = val
 
     @property
     def fill_depth_on(self):
