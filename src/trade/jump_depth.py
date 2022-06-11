@@ -11,20 +11,20 @@ from utils.remind_func import remind_tg
 logger = logging.getLogger(__name__)
 
 
-async def fill_depth(hot_coin, websocket):
-    print_prefix = '[Fill Depth]'
+async def jump_depth(hot_coin, websocket):
+    print_prefix = '[Jump Depth]'
     logger.info(print_prefix)
     self_cnt = 0
     try:
         while True:
-            print_prefix = f'[Fill Depth: {self_cnt}]'
+            print_prefix = f'[Jump Depth: {self_cnt}]'
             config.load_config()
 
-            # Check fill_depth_on
-            if not config.fill_depth_on:
-                logger.warning('fill_depth 关闭, 10秒后重试')
+            # Check jump_depth_on
+            if not config.jump_depth_on:
+                logger.warning('jump_depth 关闭, 30秒后重试')
                 self_cnt = 0
-                time.sleep(10)
+                time.sleep(30)
                 continue
 
             # Get Depth
@@ -45,20 +45,21 @@ async def fill_depth(hot_coin, websocket):
             trade_all_list = []
             self_coin_b1_price = Decimal(round(buyprice[0], config.price_decimal_num))
             price_step = round(Decimal(0.1) ** config.price_decimal_num, config.price_decimal_num)
-            for i in range(18):
-                fill_sell_price = self_coin_b1_price + price_step * (i + 3)
+            for i in range(int(config.jump_depth_count)):
+                r = random.randint(3, 20)
+                fill_sell_price = self_coin_b1_price + price_step * r
                 push_sell_price = round(fill_sell_price, config.price_decimal_num)
-                push_sell_amount = round(random.uniform(config.fill_depth_random_amount_min,
-                                                        config.fill_depth_random_amount_max), config.vol_decimal_num)
-                if fill_sell_price not in sellprice:
-                    trade_all_list.append({'price': push_sell_price, 'amount': push_sell_amount, 'trade_type': 0})
+                push_sell_amount = round(random.uniform(config.jump_depth_vol_min,
+                                                        config.jump_depth_vol_max), config.vol_decimal_num)
 
-                fill_buy_price = self_coin_b1_price - price_step * (i + 1)
+                trade_all_list.append({'price': push_sell_price, 'amount': push_sell_amount, 'trade_type': 0})
+
+                fill_buy_price = self_coin_b1_price - price_step * r
                 push_buy_price = round(fill_buy_price, config.price_decimal_num)
-                push_buy_amount = round(random.uniform(config.fill_depth_random_amount_min,
-                                                       config.fill_depth_random_amount_max), config.vol_decimal_num)
-                if fill_buy_price not in buyprice:
-                    trade_all_list.append({'price': push_buy_price, 'amount': push_buy_amount, 'trade_type': 1})
+                push_buy_amount = round(random.uniform(config.jump_depth_vol_min,
+                                                       config.jump_depth_vol_max), config.vol_decimal_num)
+
+                trade_all_list.append({'price': push_buy_price, 'amount': push_buy_amount, 'trade_type': 1})
 
             # 校验限制
             check_error_flag = False
@@ -73,6 +74,7 @@ async def fill_depth(hot_coin, websocket):
                 time.sleep(30)
                 continue
 
+            pending_cancel_order_list = []
             # 发送交易
             for item in trade_all_list:
                 logger.info(
@@ -80,12 +82,20 @@ async def fill_depth(hot_coin, websocket):
                 result = hot_coin.trade(item["price"], item["amount"], item["trade_type"])
                 resultId = result['data']['ID']
                 logger.info(f'{print_prefix} 下单成功， ID：{resultId}')
+                pending_cancel_order_list.append(resultId)
+            # 等待取消
+            logger.info(f'{print_prefix} 下单完成, {config.jump_depth_cancel_interval}秒后取消挂单')
+            time.sleep(config.jump_depth_cancel_interval)
+            for item in pending_cancel_order_list:
+                logger.info(f'{print_prefix} 撤销订单, ID => {item}')
+                cancel_result = hot_coin.cancel_order(item)
+                logger.debug(f'{print_prefix} 撤销结果 {cancel_result}')
             # Sleep
-            logger.info(f'{print_prefix} 交易完成, {config.fill_depth_interval}秒后重新进入')
-            time.sleep(config.fill_depth_interval)
+            logger.info(f'{print_prefix} 撤销完成, {config.jump_depth_interval}秒后重新进入')
+            time.sleep(config.jump_depth_interval)
             self_cnt += 1
 
     except Exception as e:
-        logger.error(f'{print_prefix}: 未知错误, 睡眠{config.fill_depth_interval}秒')
+        logger.error(f'{print_prefix}: 未知错误, 睡眠{config.jump_depth_interval}秒')
         logger.exception(e)
-        time.sleep(config.fill_depth_interval)
+        time.sleep(config.jump_depth_interval)

@@ -18,6 +18,7 @@ from trade.default_config import config
 from trade.fill_depth import fill_depth
 from trade.fork_trade import fork_trade
 from trade.hot_coin_api import HotCoin
+from trade.jump_depth import jump_depth
 from utils.account_info import accountClass
 from utils.config_loader import config as new_config
 from utils.logger_init import init_logger
@@ -248,14 +249,16 @@ def run_sched():
                                                          f'[Bot账户] 当前USDT余额：{bot_usdt_balance}\n'
                                                          f'可用余额：{bot_usdt_free_balance}')
                 else:
-                    if accountClass.BOT_USDT_BALANCE - bot_usdt_balance > new_config.alert_usdt_balance_over_amount:
+                    sub_balance = accountClass.BOT_USDT_BALANCE - bot_usdt_balance
+                    if sub_balance > new_config.alert_usdt_balance_over_amount:
                         logger.warning(f'{print_prefix} [Bot账户] USDT余额异常\n'
                                        f'当前USDT余额：{bot_usdt_balance}\n'
                                        f'可用余额：{bot_usdt_free_balance}')
                         remind_tg(new_config.ALERT_PRICE_TG_CHAT, f'#预警\n'
                                                                   f'[Bot账户] USDT余额异常\n'
                                                                   f'当前USDT余额：{bot_usdt_balance}\n'
-                                                                  f'可用余额：{bot_usdt_free_balance}')
+                                                                  f'可用余额：{bot_usdt_free_balance}\n'
+                                                                  f'总余额减少：{sub_balance}')
             else:
                 logger.warning(f'{print_prefix} 账户信息获取失败 {account_info_data}')
                 remind_tg(new_config.ALERT_PRICE_TG_CHAT, '账户信息获取失败，请检查IP是否被封禁')
@@ -280,15 +283,16 @@ def run_sched():
                                                              f'[人工账户{index + 1}] 当前USDT余额：{usdt_balance}\n'
                                                              f'可用余额：{usdt_free_balance}')
                     else:
-                        if accountClass.OTHER_ACCOUNT_USDT_BALANCE[
-                            index] - usdt_balance > new_config.alert_usdt_balance_over_amount:
+                        sub_balance = accountClass.OTHER_ACCOUNT_USDT_BALANCE[index] - usdt_balance
+                        if sub_balance > new_config.alert_usdt_balance_over_amount:
                             logger.warning(f'{print_prefix} [人工账户{index + 1}] USDT余额异常\n'
                                            f'当前USDT余额：{usdt_balance}\n'
                                            f'可用余额：{usdt_free_balance}')
                             remind_tg(new_config.ALERT_PRICE_TG_CHAT, f'#预警\n'
                                                                       f'[人工账户{index + 1}] USDT余额异常\n'
                                                                       f'当前USDT余额：{usdt_balance}\n'
-                                                                      f'可用余额：{usdt_free_balance}')
+                                                                      f'可用余额：{usdt_free_balance}\n'
+                                                                      f'总余额减少：{sub_balance}')
                 else:
                     logger.warning(f'{print_prefix} 账户信息获取失败 {account_info_data}')
                     remind_tg(new_config.ALERT_PRICE_TG_CHAT, '账户信息获取失败，请检查IP是否被封禁')
@@ -407,7 +411,7 @@ if __name__ == '__main__':
     hot_coin = HotCoin(symbol=new_config.SYMBOL)
     hot_coin.auth(key=new_config.ACCESS_KEY, secret=new_config.SECRET_KEY)
     multiprocessing.set_start_method('spawn')
-    pool = multiprocessing.Pool(processes=12)
+    pool = multiprocessing.Pool(processes=13)
     pool.apply_async(func, (hot_coin, hot_coin_func_trade.self_trade,))
     pool.apply_async(func, (hot_coin, hot_coin_func_trade.cross_trade,))
     pool.apply_async(cancel_pool, (hot_coin,))
@@ -418,6 +422,7 @@ if __name__ == '__main__':
     # pool.apply_async(func, (hot_coin, period_trade.period_trade,))
     pool.apply_async(func, (hot_coin, alert_price,))
     pool.apply_async(func, (hot_coin, fork_trade,))
+    pool.apply_async(func, (hot_coin, jump_depth,))
     pool.apply_async(func, (hot_coin, fill_depth,))
     pool.apply_async(tg_bot)
     pool.apply_async(run_sched)

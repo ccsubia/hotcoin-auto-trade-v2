@@ -84,6 +84,13 @@ class _Config:
         self._fill_depth_random_amount_max = 0
         self._fill_depth_interval = 5
 
+        self._jump_depth_on = False
+        self._jump_depth_count = 0
+        self._jump_depth_vol_min = 0
+        self._jump_depth_vol_max = 0
+        self._jump_depth_cancel_interval = 0
+        self._jump_depth_interval = 0
+
         self._price_decimal_num = 8
         self._vol_decimal_num = 2
 
@@ -160,6 +167,11 @@ class _Config:
             'fill_depth_random_amount_min',
             'fill_depth_random_amount_max',
             'fill_depth_interval',
+            'jump_depth_count',
+            'jump_depth_vol_min',
+            'jump_depth_vol_max',
+            'jump_depth_cancel_interval',
+            'jump_depth_interval',
             'target_vol_interval_minutes',
             'target_vol',
         ]
@@ -170,6 +182,7 @@ class _Config:
             'fork_trade_on',
             'auto_fork_trade_config_on',
             'fill_depth_on',
+            'jump_depth_on',
         ]
 
         config_auto_push_trade_keywords_float = [
@@ -798,6 +811,54 @@ class _Config:
     @fill_depth_interval.setter
     def fill_depth_interval(self, val):
         self._fill_depth_interval = val
+
+    @property
+    def jump_depth_on(self):
+        return self._jump_depth_on
+
+    @jump_depth_on.setter
+    def jump_depth_on(self, val):
+        self._jump_depth_on = val
+
+    @property
+    def jump_depth_count(self):
+        return self._jump_depth_count
+    
+    @jump_depth_count.setter
+    def jump_depth_count(self, val):
+        self._jump_depth_count = val
+    
+    @property
+    def jump_depth_vol_min(self):
+        return self._jump_depth_vol_min
+    
+    @jump_depth_vol_min.setter
+    def jump_depth_vol_min(self, val):
+        self._jump_depth_vol_min = val
+    
+    @property
+    def jump_depth_vol_max(self):
+        return self._jump_depth_vol_max
+    
+    @jump_depth_vol_max.setter
+    def jump_depth_vol_max(self, val):
+        self._jump_depth_vol_max = val
+
+    @property
+    def jump_depth_cancel_interval(self):
+        return self._jump_depth_cancel_interval
+
+    @jump_depth_cancel_interval.setter
+    def jump_depth_cancel_interval(self, val):
+        self._jump_depth_cancel_interval = val
+
+    @property
+    def jump_depth_interval(self):
+        return self._jump_depth_interval
+
+    @jump_depth_interval.setter
+    def jump_depth_interval(self, val):
+        self._jump_depth_interval = val
 
     # Self Trade
     @property

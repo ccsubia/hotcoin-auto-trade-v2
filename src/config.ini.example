@@ -92,6 +92,17 @@ fill_depth_random_amount_min = 0
 fill_depth_random_amount_max = 5
 ;补单20档时间间隔(秒)
 fill_depth_interval = 5
+;开启撤补功能
+jump_depth_on = True
+;撤补买卖盘各单数
+jump_depth_count = 3
+;撤补单量区间
+jump_depth_vol_min = 1
+jump_depth_vol_max = 20
+;撤销间隔(秒)
+jump_depth_cancel_interval = 5
+;撤补功能间隔(秒)
+jump_depth_interval = 15
 ;Self交易间隔(秒)
 self_trade_interval = 10
 ;Self交易交易量区间
